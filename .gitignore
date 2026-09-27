@@ -1,0 +1,11 @@
+# credentials - never commit
+kaggle.json
+*.kaggle/
+# working artifacts not needed in the repo
+*.bak
+dataset-resized/
+kaggle_output/
+outputs_from_mac_backup/
+.ruff_cache/
+__pycache__/
+.ipynb_checkpoints/

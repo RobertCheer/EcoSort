@@ -1,0 +1,13 @@
+{
+  "id": "nivalagappan/ecosort-ai-sub-system-prototype",
+  "title": "EcoSort - AI Sub-system Prototype",
+  "code_file": "EcoSort_AI_Prototype_vscode.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
+  "dataset_sources": ["nivalagappan/ecosort-trashnet-resized"],
+  "competition_sources": [],
+  "kernel_sources": []
+}
