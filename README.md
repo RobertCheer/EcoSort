@@ -32,24 +32,27 @@ Latency is averaged over the test set.
 
 | Technique | Accuracy | Macro-F1 | Latency |
 |---|---|---|---|
-| SVM (HOG + colour + GLCM) | 0.711 | 0.703 | 2.9 ms/image |
-| MobileNetV2 (transfer learning) | 0.766 | 0.747 | 3.0 ms/image |
+| SVM (HOG + colour + GLCM) | 0.711 | 0.703 | 2.8 ms/image |
+| MobileNetV2 (transfer learning) | 0.792 | 0.756 | 2.9 ms/image |
 
 Per-class F1 (test set, 380 images):
 
 | Class | SVM F1 | MobileNetV2 F1 |
 |---|---|---|
-| cardboard | 0.76 | 0.89 |
-| glass | 0.69 | 0.70 |
-| metal | 0.67 | 0.76 |
-| paper | 0.80 | 0.81 |
-| plastic | 0.64 | 0.72 |
-| trash | 0.67 | 0.60 |
+| cardboard | 0.76 | 0.88 |
+| glass | 0.69 | 0.76 |
+| metal | 0.67 | 0.78 |
+| paper | 0.80 | 0.85 |
+| plastic | 0.64 | 0.77 |
+| trash | 0.67 | 0.50 |
 
-Accuracy 0.766 sits below the REQ-01 target of 0.85. The settings behind this run are
+Accuracy 0.792 sits below the REQ-01 target of 0.85. The settings behind this run are
 deliberately small (IMG=128, 8 training epochs) so the notebook also finishes on a
-laptop CPU. We report it as measured; the report's Discussion covers the improvement path
-(larger input size, more epochs, the full hyperparameter grid, and a fine-tuning stage).
+laptop CPU. We report it as measured; the report's Discussion covers the improvement
+path (larger input size, more epochs, the full hyperparameter grid, and a fine-tuning
+stage). Two runs of this exact notebook gave 0.766 and 0.792: the SVM result is
+reproducible to the digit, and the CNN moves a little between runs on GPU even with
+fixed seeds, which is expected.
 
 ## Reproduce
 
@@ -101,5 +104,5 @@ guide, with prompts in the appendix.
 
 Kaggle's API does not export the executed notebook file, so the copy in this
 repository was assembled from the kernel run log and the per-cell inline images, with
-every number taken from that log. The log itself stays on Kaggle under version 2 of
-the notebook, so the figures and metrics here can be checked against it.
+every number taken from that log. The log itself stays on Kaggle under
+version 3 of the notebook, so the figures and metrics here can be checked against it.
