@@ -1,92 +1,283 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>EcoSort: which bin does it go in?</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♻️</text></svg>">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/antd@5.29.1/dist/reset.min.css">
-<style>
-  html { scroll-behavior: smooth; }
-  body { background: #f4f6f2; color: #1f2937; }
-  .shell { max-width: 1060px; margin: 0 auto; padding: 0 20px; }
-  section[id] { scroll-margin-top: 74px; }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EcoSort: which bin does it go in?</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♻️</text></svg>"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/antd@5.29.1/dist/reset.min.css"
+    />
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: #f4f6f2;
+        color: #1f2937;
+      }
+      .shell {
+        max-width: 1060px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      section[id] {
+        scroll-margin-top: 74px;
+      }
 
-  /* header */
-  .top { position: sticky; top: 0; z-index: 30; background: rgba(255,255,255,.95);
-         backdrop-filter: blur(6px); border-bottom: 1px solid #e5e9e1; padding: 0; height: 58px;
-         display: flex; align-items: center; }
-  .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 16px; }
-  .brand .dot { width: 12px; height: 12px; border-radius: 3px; background: #2e7d32; }
-  .topnav a { color: #4b5563; margin-left: 18px; font-size: 14px; }
-  .topnav a:hover { color: #2e7d32; }
-  @media (max-width: 860px) { .topnav { display: none; } }
+      /* header */
+      .top {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(6px);
+        border-bottom: 1px solid #e5e9e1;
+        padding: 0;
+        height: 58px;
+        display: flex;
+        align-items: center;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-weight: 700;
+        font-size: 16px;
+      }
+      .brand .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        background: #2e7d32;
+      }
+      .topnav a {
+        color: #4b5563;
+        margin-left: 18px;
+        font-size: 14px;
+      }
+      .topnav a:hover {
+        color: #2e7d32;
+      }
+      @media (max-width: 860px) {
+        .topnav {
+          display: none;
+        }
+      }
 
-  /* hero */
-  .hero { background: #163a26; color: #eaf3ea; }
-  .hero .shell { display: grid; grid-template-columns: 1.05fr .95fr; gap: 44px;
-                 align-items: center; padding-top: 46px; padding-bottom: 66px; }
-  .hero h1 { color: #fff; font-size: 44px; line-height: 1.05; margin: 0 0 12px; letter-spacing: -.6px; }
-  .hero .pitch { font-size: 19px; line-height: 1.5; color: #d7e8d7; margin: 0 0 22px; max-width: 34em; }
-  .hero .shot { width: 100%; border-radius: 14px; display: block;
-                box-shadow: 0 18px 40px rgba(0,0,0,.35); border: 1px solid #2c5a3c; }
-  @media (max-width: 900px) { .hero .shell { grid-template-columns: 1fr; padding-top: 34px; padding-bottom: 56px; gap: 28px; } }
+      /* hero */
+      .hero {
+        background: #163a26;
+        color: #eaf3ea;
+      }
+      .hero .shell {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 44px;
+        align-items: center;
+        padding-top: 46px;
+        padding-bottom: 66px;
+      }
+      .hero h1 {
+        color: #fff;
+        font-size: 44px;
+        line-height: 1.05;
+        margin: 0 0 12px;
+        letter-spacing: -0.6px;
+      }
+      .hero .pitch {
+        font-size: 19px;
+        line-height: 1.5;
+        color: #d7e8d7;
+        margin: 0 0 22px;
+        max-width: 34em;
+      }
+      .hero .shot {
+        width: 100%;
+        border-radius: 14px;
+        display: block;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+        border: 1px solid #2c5a3c;
+      }
+      @media (max-width: 900px) {
+        .hero .shell {
+          grid-template-columns: 1fr;
+          padding-top: 34px;
+          padding-bottom: 56px;
+          gap: 28px;
+        }
+      }
 
-  /* floating stat strip */
-  .stats { background: #fff; border: 1px solid #e5e9e1; border-radius: 14px; margin-top: -40px;
-           box-shadow: 0 14px 34px rgba(16, 40, 22, .10); position: relative; z-index: 2; }
-  .stats .ant-col { padding: 20px 24px; }
-  .stats .ant-col + .ant-col { border-left: 1px solid #eef1ea; }
-  @media (max-width: 760px) { .stats .ant-col + .ant-col { border-left: none; border-top: 1px solid #eef1ea; } }
+      /* floating stat strip */
+      .stats {
+        background: #fff;
+        border: 1px solid #e5e9e1;
+        border-radius: 14px;
+        margin-top: -40px;
+        box-shadow: 0 14px 34px rgba(16, 40, 22, 0.1);
+        position: relative;
+        z-index: 2;
+      }
+      .stats .ant-col {
+        padding: 20px 24px;
+      }
+      .stats .ant-col + .ant-col {
+        border-left: 1px solid #eef1ea;
+      }
+      @media (max-width: 760px) {
+        .stats .ant-col + .ant-col {
+          border-left: none;
+          border-top: 1px solid #eef1ea;
+        }
+      }
 
-  /* sections */
-  .band { padding: 56px 0 4px; }
-  .eyebrow { font-size: 12.5px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase;
-             color: #2e7d32; margin-bottom: 6px; }
-  .lead { font-size: 16px; color: #43514a; max-width: 760px; margin: 0 0 18px; }
-  .panel { background: #fff; border: 1px solid #e5e9e1; border-radius: 14px; }
-  .cap { font-size: 13.5px; color: #5c6b60; margin-top: 8px; }
-  figure { margin: 0; }
-  .mermaidwrap { background: #fff; border: 1px solid #e5e9e1; border-radius: 14px; padding: 18px 10px; }
-  .mermaid { text-align: center; margin: 0; }
-  .mermaid svg { max-width: 100%; height: auto; }
-  .winner { color: #2e7d32; font-weight: 700; }
-  .loser { color: #6b7280; }
-  .lift { transition: transform .18s ease, box-shadow .18s ease; }
-  .lift:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(16, 40, 22, .10); }
-  @media (prefers-reduced-motion: reduce) { .lift, .lift:hover { transition: none; transform: none; } }
-  .foot { background: #fff; border-top: 1px solid #e5e9e1; margin-top: 64px; padding: 30px 0 44px; }
-  .foot p { color: #5c6b60; font-size: 13.5px; margin: 0 0 10px; }
-  .foot a { word-break: break-word; }
-  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-          font-size: 13px; white-space: pre-wrap; word-break: break-all;
-          background: #f6f8f4; border: 1px solid #e5e9e1; border-radius: 8px;
-          padding: 10px 12px; display: block; margin: 10px 0; }
-</style>
-</head>
-<body>
+      /* sections */
+      .band {
+        padding: 56px 0 4px;
+      }
+      .eyebrow {
+        font-size: 12.5px;
+        font-weight: 700;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        color: #2e7d32;
+        margin-bottom: 6px;
+      }
+      .lead {
+        font-size: 16px;
+        color: #43514a;
+        max-width: 760px;
+        margin: 0 0 18px;
+      }
+      .panel {
+        background: #fff;
+        border: 1px solid #e5e9e1;
+        border-radius: 14px;
+      }
+      .cap {
+        font-size: 13.5px;
+        color: #5c6b60;
+        margin-top: 8px;
+      }
+      figure {
+        margin: 0;
+      }
+      .mermaidwrap {
+        background: #fff;
+        border: 1px solid #e5e9e1;
+        border-radius: 14px;
+        padding: 18px 10px;
+      }
+      .mermaid {
+        text-align: center;
+        margin: 0;
+      }
+      .mermaid svg {
+        max-width: 100%;
+        height: auto;
+      }
+      .winner {
+        color: #2e7d32;
+        font-weight: 700;
+      }
+      .loser {
+        color: #6b7280;
+      }
+      .lift {
+        transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease;
+      }
+      .lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(16, 40, 22, 0.1);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .lift,
+        .lift:hover {
+          transition: none;
+          transform: none;
+        }
+      }
+      .foot {
+        background: #fff;
+        border-top: 1px solid #e5e9e1;
+        margin-top: 64px;
+        padding: 30px 0 44px;
+      }
+      .foot p {
+        color: #5c6b60;
+        font-size: 13.5px;
+        margin: 0 0 10px;
+      }
+      .foot a {
+        word-break: break-word;
+      }
+      .mono {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        background: #f6f8f4;
+        border: 1px solid #e5e9e1;
+        border-radius: 8px;
+        padding: 10px 12px;
+        display: block;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
 
-<div id="root"></div>
+    <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.13/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/antd@5.29.1/dist/antd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.13/dayjs.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/antd@5.29.1/dist/antd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.26.4/babel.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: "neutral",
+        flowchart: { curve: "basis" },
+      });
+      window.__mermaid = mermaid;
+    </script>
 
-<script type="module">
-  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs';
-  mermaid.initialize({ startOnLoad: false, theme: 'neutral', flowchart: { curve: 'basis' } });
-  window.__mermaid = mermaid;
-</script>
+    <script type="text/babel" data-presets="react">
+      const {
+        ConfigProvider,
+        Layout,
+        Button,
+        Typography,
+        Card,
+        Row,
+        Col,
+        Statistic,
+        Table,
+        Progress,
+        Tabs,
+        Steps,
+        Tag,
+        Alert,
+        Image,
+        Space,
+        Flex,
+        Divider,
+        Tooltip,
+        Badge,
+        Descriptions,
+        Collapse,
+      } = antd;
+      const { Title, Paragraph, Text, Link } = Typography;
 
-<script type="text/babel" data-presets="react">
-const { ConfigProvider, Layout, Button, Typography, Card, Row, Col, Statistic, Table, Progress,
-        Tabs, Steps, Tag, Alert, Image, Space, Flex, Divider, Tooltip, Badge, Descriptions,
-        Collapse } = antd;
-const { Title, Paragraph, Text, Link } = Typography;
-
-const DIAGRAM = `
+      const DIAGRAM = `
 flowchart TD
   cam["Item + camera"] --> clean["Tidy the photo"]
   clean --> cls["Classifier: kind + confidence"]
@@ -102,429 +293,824 @@ flowchart TD
   class cam,q,bin,per,log,board later
 `;
 
-function useMermaid() {
-  React.useEffect(() => {
-    let tries = 0;
-    const t = setInterval(async () => {
-      tries += 1;
-      const nodes = document.querySelectorAll('.mermaid:not([data-processed])');
-      if (window.__mermaid && nodes.length) {
-        clearInterval(t);
-        try { await window.__mermaid.run({ nodes }); }
-        catch (e) { console.error('mermaid failed', e); }
-      } else if (tries > 100) {
-        clearInterval(t);
+      function useMermaid() {
+        React.useEffect(() => {
+          let tries = 0;
+          const t = setInterval(async () => {
+            tries += 1;
+            const nodes = document.querySelectorAll(
+              ".mermaid:not([data-processed])",
+            );
+            if (window.__mermaid && nodes.length) {
+              clearInterval(t);
+              try {
+                await window.__mermaid.run({ nodes });
+              } catch (e) {
+                console.error("mermaid failed", e);
+              }
+            } else if (tries > 100) {
+              clearInterval(t);
+            }
+          }, 100);
+          return () => clearInterval(t);
+        }, []);
       }
-    }, 100);
-    return () => clearInterval(t);
-  }, []);
-}
 
-const classRows = [
-  { key: 'cardboard', item: 'Cardboard', test: 60, svm: 0.76, cnn: 0.88 },
-  { key: 'glass', item: 'Glass', test: 76, svm: 0.69, cnn: 0.76 },
-  { key: 'metal', item: 'Metal', test: 62, svm: 0.67, cnn: 0.78 },
-  { key: 'paper', item: 'Paper', test: 89, svm: 0.80, cnn: 0.85 },
-  { key: 'plastic', item: 'Plastic', test: 73, svm: 0.64, cnn: 0.77 },
-  { key: 'trash', item: 'Trash (odds and ends)', test: 20, svm: 0.67, cnn: 0.50 },
-];
+      const classRows = [
+        { key: "cardboard", item: "Cardboard", test: 60, svm: 0.76, cnn: 0.84 },
+        { key: "glass", item: "Glass", test: 76, svm: 0.69, cnn: 0.77 },
+        { key: "metal", item: "Metal", test: 62, svm: 0.67, cnn: 0.78 },
+        { key: "paper", item: "Paper", test: 89, svm: 0.8, cnn: 0.83 },
+        { key: "plastic", item: "Plastic", test: 73, svm: 0.64, cnn: 0.75 },
+        {
+          key: "trash",
+          item: "Trash (odds and ends)",
+          test: 20,
+          svm: 0.67,
+          cnn: 0.5,
+        },
+      ];
 
-const f1 = (better, v) => better
-  ? <span className="winner">{v.toFixed(2)}</span>
-  : <span className="loser">{v.toFixed(2)}</span>;
+      const f1 = (better, v) =>
+        better ? (
+          <span className="winner">{v.toFixed(2)}</span>
+        ) : (
+          <span className="loser">{v.toFixed(2)}</span>
+        );
 
-const f1Tip = 'F1 is a score out of 1 for one kind of item. It balances two mistakes: missing real items, and raising false alarms. Higher is better.';
+      const f1Tip =
+        "F1 is a score out of 1 for one kind of item. It balances two mistakes: missing real items, and raising false alarms. Higher is better.";
 
-const columns = [
-  { title: 'Kind of item', dataIndex: 'item', key: 'item' },
-  { title: <Tooltip title="How many photos of this kind sat in the final exam."><span>Test photos</span></Tooltip>,
-    dataIndex: 'test', key: 'test', align: 'right' },
-  { title: <Tooltip title={f1Tip}><span>The measurer (F1)</span></Tooltip>,
-    key: 'svm', align: 'right', render: (_, r) => f1(r.svm > r.cnn, r.svm) },
-  { title: <Tooltip title={f1Tip}><span>The apprentice (F1)</span></Tooltip>,
-    key: 'cnn', align: 'right', render: (_, r) => f1(r.cnn > r.svm, r.cnn) },
-];
+      const columns = [
+        { title: "Kind of item", dataIndex: "item", key: "item" },
+        {
+          title: (
+            <Tooltip title="How many photos of this kind sat in the final exam.">
+              <span>Test photos</span>
+            </Tooltip>
+          ),
+          dataIndex: "test",
+          key: "test",
+          align: "right",
+        },
+        {
+          title: (
+            <Tooltip title={f1Tip}>
+              <span>The measurer (F1)</span>
+            </Tooltip>
+          ),
+          key: "svm",
+          align: "right",
+          render: (_, r) => f1(r.svm > r.cnn, r.svm),
+        },
+        {
+          title: (
+            <Tooltip title={f1Tip}>
+              <span>The apprentice (F1)</span>
+            </Tooltip>
+          ),
+          key: "cnn",
+          align: "right",
+          render: (_, r) => f1(r.cnn > r.svm, r.cnn),
+        },
+      ];
 
-const counts = [
-  ['Cardboard', 403, '#1b5e20'], ['Glass', 501, '#2e7d32'], ['Metal', 410, '#388e3c'],
-  ['Paper', 594, '#43a047'], ['Plastic', 482, '#66bb6a'], ['Trash', 137, '#c62828'],
-];
+      const counts = [
+        ["Cardboard", 403, "#1b5e20"],
+        ["Glass", 501, "#2e7d32"],
+        ["Metal", 410, "#388e3c"],
+        ["Paper", 594, "#43a047"],
+        ["Plastic", 482, "#66bb6a"],
+        ["Trash", 137, "#c62828"],
+      ];
 
-function Pic({ src, alt, caption }) {
-  return (
-    <figure>
-      <Image src={src} alt={alt} width="100%" style={{ border: '1px solid #e5e9e1', borderRadius: 12 }} />
-      {caption ? <div className="cap">{caption}</div> : null}
-    </figure>
-  );
-}
+      function Pic({ src, alt, caption }) {
+        return (
+          <figure>
+            <Image
+              src={src}
+              alt={alt}
+              width="100%"
+              style={{ border: "1px solid #e5e9e1", borderRadius: 12 }}
+            />
+            {caption ? <div className="cap">{caption}</div> : null}
+          </figure>
+        );
+      }
 
-function Band({ id, n, title, children }) {
-  return (
-    <section id={id} className="band">
-      <div className="shell">
-        <div className="eyebrow">{n}</div>
-        <Title level={2} style={{ margin: '0 0 10px', fontSize: 27 }}>{title}</Title>
-        {children}
-      </div>
-    </section>
-  );
-}
-
-const bullets = [
-  'Measures the outline, the colours and the roughness by hand first.',
-  'Then a simple rulebook votes on those measurements.',
-  'Fast, easy to inspect, and it learns from very few examples.',
-];
-
-const bullets2 = [
-  'Arrived having already seen more than a million everyday photos.',
-  'We showed it our 2,527 rubbish photos, and it adjusted.',
-  'Handles new photos better, but shows less of its reasoning.',
-];
-
-const facts = [
-  ['Dataset', 'TrashNet, 2,527 photos, six kinds'],
-  ['Split', '70 / 15 / 15, fixed seed 42, identical on every run'],
-  ['Entry level', 'SVM on 1,900 hand-made measurements'],
-  ['Strongest', 'MobileNetV2, 128-pixel inputs, eight rounds'],
-  ['Where it ran', 'Kaggle, 2 x T4 GPU, 27 September 2026, about 6 minutes'],
-  ['Stack', 'Python 3.12, TensorFlow 2.20.0, scikit-learn'],
-];
-
-const explainers = [
-  { key: 'f1', label: 'What does F1 mean?',
-    children: <Paragraph>{f1Tip} The table above shows it kind by kind. The diagonal of a confusion matrix is the same idea in pictures.</Paragraph> },
-  { key: 'fair', label: 'How do we know the 79.2% is fair?',
-    children: <Paragraph>The 380 test photos were locked away before training started and never used to tune anything. The split uses a fixed seed, so the same photos land in the exam on every run.</Paragraph> },
-  { key: 'rounds', label: 'Why only eight rounds of training?',
-    children: <Paragraph>The notebook is set to finish on an ordinary laptop: small 128-pixel photos, eight rounds, a compact search for settings. Bigger inputs and more rounds should lift the score, and that is the first thing on our list.</Paragraph> },
-  { key: 'sure', label: 'What happens when it is not sure?',
-    children: <Paragraph>The classifier already returns a confidence with every guess. In November, items below a set threshold will go to a person instead of a bin.</Paragraph> },
-  { key: 'runs', label: 'Two runs, two scores?',
-    children: <Paragraph>The same notebook gave 76.6% and then 79.2% across two runs. The measurer gave identical results both times. Small drift is normal when a graphics card does the training, and we say so in the report.</Paragraph> },
-];
-
-function App() {
-  useMermaid();
-
-  return (
-    <ConfigProvider theme={{ token: { colorPrimary: '#2e7d32', borderRadius: 10, fontSize: 15 } }}>
-      <Layout style={{ background: 'transparent' }}>
-
-        <Layout.Header className="top">
-          <div className="shell" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-            <div className="brand"><span className="dot" /> EcoSort</div>
-            <nav className="topnav">
-              <a href="#how">How it works</a>
-              <a href="#teachers">The methods</a>
-              <a href="#results">Results</a>
-              <a href="#data">The photos</a>
-              <a href="#run">Run it</a>
-              <a href="#answers">Small print</a>
-            </nav>
-          </div>
-        </Layout.Header>
-
-        <Layout.Content>
-          <Image.PreviewGroup>
-            <div className="hero">
-              <div className="shell">
-                <div>
-                  <h1>EcoSort</h1>
-                  <p className="pitch">
-                    Hold a piece of rubbish up to a camera. The program says which bin it
-                    belongs in, and how sure it is. When it is not sure, it asks a person.
-                  </p>
-                  <Space wrap>
-                    <Button size="large" href="https://www.kaggle.com/code/nivalagappan/ecosort-ai-sub-system-prototype"
-                      target="_blank" rel="noreferrer"
-                      style={{ background: '#fff', color: '#1b5e20', borderColor: '#fff', fontWeight: 600 }}>
-                      Open the notebook
-                    </Button>
-                    <Button size="large" ghost href="https://github.com/RobertCheer/ICT304"
-                      target="_blank" rel="noreferrer">Code and reports</Button>
-                  </Space>
-                </div>
-                <div>
-                  <img className="shot" src="img/samples_per_class.png"
-                       alt="One example photo from each of the six kinds of rubbish" />
-                </div>
-              </div>
-            </div>
-
+      function Band({ id, n, title, children }) {
+        return (
+          <section id={id} className="band">
             <div className="shell">
-              <Card className="stats" variant="borderless">
-                <Row>
-                  <Col xs={24} sm={12} lg={6}>
-                    <Statistic title="Correct on unseen photos" value={79.2} suffix="%" precision={1}
-                      valueStyle={{ color: '#2e7d32', fontWeight: 700 }} />
-                  </Col>
-                  <Col xs={24} sm={12} lg={6}>
-                    <Statistic title="The simpler method" value={71.1} suffix="%" precision={1}
-                      valueStyle={{ color: '#556' }} />
-                  </Col>
-                  <Col xs={24} sm={12} lg={6}>
-                    <Statistic title="Time to judge one photo" value={2.9} suffix="ms" precision={1}
-                      valueStyle={{ color: '#556' }} />
-                  </Col>
-                  <Col xs={24} sm={12} lg={6}>
-                    <Statistic title="Photos it learned from" value={2527}
-                      valueStyle={{ color: '#556' }} />
-                  </Col>
-                </Row>
-              </Card>
+              <div className="eyebrow">{n}</div>
+              <Title level={2} style={{ margin: "0 0 10px", fontSize: 27 }}>
+                {title}
+              </Title>
+              {children}
             </div>
+          </section>
+        );
+      }
 
-            <Band id="how" n="01 · How it works" title="One item, start to finish">
-              <p className="lead">Green boxes work today. Dashed boxes arrive in November.</p>
-              <div className="mermaidwrap">
-                <pre className="mermaid">{DIAGRAM}</pre>
-              </div>
-              <Space style={{ marginTop: 12 }} wrap>
-                <Tag color="green">Built now</Tag>
-                <Tag>Coming in November</Tag>
-                <Text type="secondary">Waitun already sketched the tally board in its own notebook. It is not wired to the classifier yet.</Text>
-              </Space>
-            </Band>
+      const bullets = [
+        "Measures the outline, the colours and the roughness by hand first.",
+        "Then a simple rulebook votes on those measurements.",
+        "Fast, easy to inspect, and it learns from very few examples.",
+      ];
 
-            <Band id="teachers" n="02 · Two ways to teach a machine" title="A rulebook, or a well-read apprentice">
-              <Row gutter={[16, 16]}>
-                <Col xs={24} md={12}>
-                  <Card className="panel lift" style={{ height: '100%' }} title="The measurer">
-                    <Flex justify="center" style={{ marginBottom: 10 }}>
-                      <Progress type="dashboard" percent={71.1} strokeColor="#8496a8"
-                        size={150} format={(p) => <span style={{ fontSize: 22, fontWeight: 700 }}>{p.toFixed(1)}%</span>} />
-                    </Flex>
-                    <ul style={{ paddingLeft: 18, margin: 0, color: '#43514a' }}>
-                      {bullets.map((b) => <li key={b} style={{ marginBottom: 6 }}>{b}</li>)}
-                    </ul>
-                  </Card>
-                </Col>
-                <Col xs={24} md={12}>
-                  <Badge.Ribbon text="best score, and the one we would ship" color="green">
-                    <Card className="panel lift" style={{ height: '100%' }} title="The apprentice">
-                      <Flex justify="center" style={{ marginBottom: 10 }}>
-                        <Progress type="dashboard" percent={79.2} strokeColor="#2e7d32"
-                          size={150} format={(p) => <span style={{ fontSize: 22, fontWeight: 700 }}>{p.toFixed(1)}%</span>} />
-                      </Flex>
-                      <ul style={{ paddingLeft: 18, margin: 0, color: '#43514a' }}>
-                        {bullets2.map((b) => <li key={b} style={{ marginBottom: 6 }}>{b}</li>)}
-                      </ul>
-                    </Card>
-                  </Badge.Ribbon>
-                </Col>
-              </Row>
-              <p className="lead" style={{ marginTop: 16, marginBottom: 0 }}>
-                Same 380 held-back photos for both. Both answer in about three milliseconds,
-                far inside the brief's one-second limit.
-              </p>
-            </Band>
+      const bullets2 = [
+        "Arrived having already seen more than a million everyday photos.",
+        "We showed it our 2,527 rubbish photos, and it adjusted.",
+        "Handles new photos better, but shows less of its reasoning.",
+      ];
 
-            <Band id="results" n="03 · Right and wrong, kind by kind" title="Where it holds up, and where it slips">
-              <Table className="panel" columns={columns} dataSource={classRows}
-                     pagination={false} size="middle" scroll={{ x: 'max-content' }} />
-              <div className="cap" style={{ marginTop: 8 }}>Hover a column heading for what the number means. Green marks the winner per row.</div>
-              <Row gutter={[16, 16]} style={{ marginTop: 22 }}>
-                <Col xs={24} md={12}>
-                  <Pic src="img/cm_SVM.png" alt="Where the measurer guessed right and wrong"
-                    caption="The measurer. Rows: what the item really was. Columns: what it guessed. Dark diagonal is correct." />
-                </Col>
-                <Col xs={24} md={12}>
-                  <Pic src="img/cm_MobileNetV2.png" alt="Where the apprentice guessed right and wrong"
-                    caption="The apprentice. Cleaner diagonal. Usual slip: glass read as plastic, both clear and shiny." />
-                </Col>
-              </Row>
-            </Band>
+      const facts = [
+        ["Dataset", "TrashNet, 2,527 photos, six kinds"],
+        ["Split", "70 / 15 / 15, fixed seed 42, identical on every run"],
+        ["Entry level", "SVM on 1,900 hand-made measurements"],
+        ["Strongest", "MobileNetV2, 128-pixel inputs, eight rounds"],
+        [
+          "Where it ran",
+          "Kaggle, 2 x T4 GPU, 28 September 2026, about 6 minutes",
+        ],
+        ["Stack", "Python 3.12, TensorFlow 2.20.0, scikit-learn"],
+      ];
 
-            <Band id="trash" n="04 · The hard one" title="Trash is rare, and that is the problem">
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={8}>
-                  <Card className="panel" size="small">
-                    <Statistic title="Trash photos in the whole set" value={137}
-                      valueStyle={{ color: '#c62828', fontWeight: 700 }} />
-                  </Card>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Card className="panel" size="small">
-                    <Statistic title="What it scores on that kind (F1)" value={0.50} precision={2}
-                      valueStyle={{ color: '#c62828', fontWeight: 700 }} />
-                  </Card>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Card className="panel" size="small">
-                    <Tooltip title="How much extra those rare photos counted during training.">
-                      <Statistic title="Extra weight given in training" value={3.07} precision={2}
-                        suffix="x" valueStyle={{ color: '#1f2937', fontWeight: 700 }} />
-                    </Tooltip>
-                  </Card>
-                </Col>
-              </Row>
-              <p className="lead" style={{ marginTop: 16, marginBottom: 0 }}>
-                Against 594 paper photos, the odds and ends barely show up. We weighted them
-                up during training and report the weak score openly. The honest fix is more
-                examples of trash.
-              </p>
-            </Band>
+      const explainers = [
+        {
+          key: "f1",
+          label: "What does F1 mean?",
+          children: (
+            <Paragraph>
+              {f1Tip} The table above shows it kind by kind. The diagonal of a
+              confusion matrix is the same idea in pictures.
+            </Paragraph>
+          ),
+        },
+        {
+          key: "fair",
+          label: "How do we know the score is fair?",
+          children: (
+            <Paragraph>
+              The 380 test photos were locked away before training started and
+              never used to tune anything. The split uses a fixed seed, so the
+              same photos land in the exam on every run.
+            </Paragraph>
+          ),
+        },
+        {
+          key: "rounds",
+          label: "Why only eight rounds of training?",
+          children: (
+            <Paragraph>
+              The notebook is set to finish on an ordinary laptop: small
+              128-pixel photos, eight rounds, a compact search for settings.
+              Bigger inputs and more rounds should lift the score, and that is
+              the first thing on our list.
+            </Paragraph>
+          ),
+        },
+        {
+          key: "sure",
+          label: "What happens when it is not sure?",
+          children: (
+            <Paragraph>
+              The classifier already returns a confidence with every guess. In
+              November, items below a set threshold will go to a person instead
+              of a bin.
+            </Paragraph>
+          ),
+        },
+        {
+          key: "runs",
+          label: "Different runs, different scores?",
+          children: (
+            <Paragraph>
+              The same notebook gave between 75.5% and 79.2% across six runs on
+different machines. The measurer gave identical results every
+time. Small drift is normal
+              when a graphics card does the training, and we say so in the
+              report.
+            </Paragraph>
+          ),
+        },
+      ];
 
-            <Band id="data" n="05 · The photos it learned from" title="2,527 photos, split three ways">
-              <Row gutter={[16, 16]}>
-                <Col xs={24} sm={8}>
-                  <Card className="panel" size="small">
-                    <Statistic title="Teach the model (70%)" value={1768} valueStyle={{ fontWeight: 700 }} />
-                  </Card>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Card className="panel" size="small">
-                    <Statistic title="Check progress (15%)" value={379} valueStyle={{ fontWeight: 700 }} />
-                  </Card>
-                </Col>
-                <Col xs={24} sm={8}>
-                  <Card className="panel" size="small">
-                    <Statistic title="Final exam (15%)" value={380}
-                      valueStyle={{ color: '#2e7d32', fontWeight: 700 }} />
-                  </Card>
-                </Col>
-              </Row>
-              <div className="cap" style={{ marginTop: 8 }}>
-                Locked with seed 42, so the same photos land in each part on every run.
-              </div>
-              <Row gutter={[16, 16]} style={{ marginTop: 22 }}>
-                {counts.map(([name, n, color]) => (
-                  <Col xs={24} sm={12} md={8} key={name}>
-                    <Card className="panel" size="small">
-                      <Text>{name}</Text>
-                      <Progress percent={Math.round(n / 594 * 100)} strokeWidth={8}
-                        strokeColor={color} format={() => n + ' photos'} />
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-              <Row gutter={[16, 16]} style={{ marginTop: 22 }}>
-                <Col xs={24} md={12}>
-                  <Pic src="img/class_distribution.png" alt="Counts of photos per kind"
-                    caption="Trash is the smallest pile by far: 137 images against 594 for paper." />
-                </Col>
-                <Col xs={24} md={12}>
-                  <Pic src="img/mobilenetv2_training.png" alt="Training curves"
-                    caption="Each round of training raised accuracy and lowered loss until the curves flattened." />
-                </Col>
-              </Row>
-            </Band>
+      function App() {
+        useMermaid();
 
-            <Band id="run" n="06 · Run it yourself" title="Three ways to see it work">
-              <Tabs
-                items={[
-                  {
-                    key: 'kaggle',
-                    label: 'Kaggle (easiest)',
-                    children: (
-                      <>
-                        <p className="lead">Press Save &amp; Run All. Nothing to install: the data and the
-                          pretrained model travel with the notebook, and it runs without internet.</p>
+        return (
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: "#2e7d32",
+                borderRadius: 10,
+                fontSize: 15,
+              },
+            }}
+          >
+            <Layout style={{ background: "transparent" }}>
+              <Layout.Header className="top">
+                <div
+                  className="shell"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <div className="brand">
+                    <span className="dot" /> EcoSort
+                  </div>
+                  <nav className="topnav">
+                    <a href="#how">How it works</a>
+                    <a href="#teachers">The methods</a>
+                    <a href="#results">Results</a>
+                    <a href="#data">The photos</a>
+                    <a href="#run">Run it</a>
+                    <a href="#answers">Small print</a>
+                  </nav>
+                </div>
+              </Layout.Header>
+
+              <Layout.Content>
+                <Image.PreviewGroup>
+                  <div className="hero">
+                    <div className="shell">
+                      <div>
+                        <h1>EcoSort</h1>
+                        <p className="pitch">
+                          Hold a piece of rubbish up to a camera. The program
+                          says which bin it belongs in, and how sure it is. When
+                          it is not sure, it asks a person.
+                        </p>
                         <Space wrap>
-                          <Button type="primary" href="https://www.kaggle.com/code/nivalagappan/ecosort-ai-sub-system-prototype"
-                            target="_blank" rel="noreferrer">Open the notebook</Button>
-                          <Text type="secondary">Public: read every cell and its output without an account.</Text>
+                          <Button
+                            size="large"
+                            href="https://www.kaggle.com/code/nivalagappan/ecosort-ai-sub-system-prototype"
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              background: "#fff",
+                              color: "#1b5e20",
+                              borderColor: "#fff",
+                              fontWeight: 600,
+                            }}
+                          >
+                            Open the notebook
+                          </Button>
+                          <Button
+                            size="large"
+                            ghost
+                            href="https://github.com/RobertCheer/ICT304"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Code and reports
+                          </Button>
                         </Space>
-                      </>
-                    ),
-                  },
-                  {
-                    key: 'colab',
-                    label: 'Google Colab',
-                    children: (
-                      <>
-                        <p className="lead">Upload the notebook from the repository, then Runtime, then Run all.
-                          It fetches the dataset (about 3.6 GB) the first time.</p>
-                        <Text code>EcoSort_AI_Prototype_vscode.ipynb</Text>
-                      </>
-                    ),
-                  },
-                  {
-                    key: 'local',
-                    label: 'Your own computer',
-                    children: (
-                      <>
-                        <p className="lead" style={{ marginBottom: 4 }}>Install, then run the notebook or the script. A laptop takes 20 to 40 minutes.</p>
-                        <code className="mono">pip install tensorflow scikit-learn scikit-image huggingface_hub matplotlib seaborn pillow</code>
-                      </>
-                    ),
-                  },
-                ]}
-              />
-              <Card className="panel" style={{ marginTop: 8 }} title="Run facts">
-                <Descriptions column={{ xs: 1, sm: 2 }} size="small" items={facts.map(([k, v]) => ({ key: k, label: k, children: v }))} />
-              </Card>
-            </Band>
+                      </div>
+                      <div>
+                        <img
+                          className="shot"
+                          src="img/samples_per_class.png"
+                          alt="One example photo from each of the six kinds of rubbish"
+                        />
+                      </div>
+                    </div>
+                  </div>
 
-            <Band id="status" n="07 · Status" title="Done, and what comes next">
-              <Steps
-                direction="vertical"
-                size="small"
-                current={3}
-                items={[
-                  { title: 'Photos loaded, cleaned and split', description: 'Done. The same split on every run.' },
-                  { title: 'Both classifiers trained and tested', description: 'Done. The numbers on this page.' },
-                  { title: 'Comparison and a one-photo demo', description: 'Done. See the demo below.' },
-                  { title: 'Camera capture and bin routing', description: 'November. The physical side.' },
-                  { title: 'Human review for unsure items', description: 'November. A person, not a bin.' },
-                  { title: 'Logging, tally board, operator screen', description: 'November. For the people running it.' },
-                  { title: 'Demo video and presentation', description: 'November. The whole machine.' },
-                ]}
-              />
-              <Row gutter={[16, 16]} style={{ marginTop: 18 }}>
-                <Col xs={24} md={12}>
-                  <Pic src="img/demo_prediction.png" alt="One-photo demo"
-                    caption="The demo: a held-back photo of metal. The measurer says 0.62 confident, the apprentice 0.90." />
-                </Col>
-                <Col xs={24} md={12}>
-                  <Pic src="img/samples_per_class.png" alt="One sample photo per kind"
-                    caption="One sample from each kind, straight from the dataset." />
-                </Col>
-              </Row>
-            </Band>
+                  <div className="shell">
+                    <Card className="stats" variant="borderless">
+                      <Row>
+                        <Col xs={24} sm={12} lg={6}>
+                          <Statistic
+                            title="Correct on unseen photos"
+                            value={77.6}
+                            suffix="%"
+                            precision={1}
+                            valueStyle={{ color: "#2e7d32", fontWeight: 700 }}
+                          />
+                        </Col>
+                        <Col xs={24} sm={12} lg={6}>
+                          <Statistic
+                            title="The simpler method"
+                            value={71.1}
+                            suffix="%"
+                            precision={1}
+                            valueStyle={{ color: "#556" }}
+                          />
+                        </Col>
+                        <Col xs={24} sm={12} lg={6}>
+                          <Statistic
+                            title="Time to judge one photo"
+                            value={2.8}
+                            suffix="ms"
+                            precision={1}
+                            valueStyle={{ color: "#556" }}
+                          />
+                        </Col>
+                        <Col xs={24} sm={12} lg={6}>
+                          <Statistic
+                            title="Photos it learned from"
+                            value={2527}
+                            valueStyle={{ color: "#556" }}
+                          />
+                        </Col>
+                      </Row>
+                    </Card>
+                  </div>
 
-            <Band id="answers" n="08 · Straight answers" title="The parts we would rather you heard from us">
-              <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                <Alert type="warning" showIcon message="79.2% is below the 85% target we set in the brief."
-                  description="Small 128-pixel inputs and eight rounds keep the notebook laptop-friendly. The path up is on our list, and one explainer below says how." />
-                <Alert type="info" showIcon message="The bins, the review queue and the tally board do not exist yet."
-                  description="They are designed in the report and arrive in November. Nothing on this page is mocked up to look finished." />
-              </Space>
-              <Collapse style={{ marginTop: 16 }} items={explainers} />
-            </Band>
-          </Image.PreviewGroup>
-        </Layout.Content>
+                  <Band
+                    id="how"
+                    n="01 · How it works"
+                    title="One item, start to finish"
+                  >
+                    <p className="lead">
+                      Green boxes work today. Dashed boxes arrive in November.
+                    </p>
+                    <div className="mermaidwrap">
+                      <pre className="mermaid">{DIAGRAM}</pre>
+                    </div>
+                    <Space style={{ marginTop: 12 }} wrap>
+                      <Tag color="green">Built now</Tag>
+                      <Tag>Coming in November</Tag>
+                      <Text type="secondary">
+                        Waitun already sketched the tally board in its own
+                        notebook. It is not wired to the classifier yet.
+                      </Text>
+                    </Space>
+                  </Band>
 
-        <Layout.Footer className="foot" style={{ padding: 0 }}>
-          <div className="shell" style={{ paddingTop: 30 }}>
-            <p>
-              EcoSort is a team project for ICT304 at Murdoch University, 2026. Nivetha built the
-              classifier and this page. Robert owns the architecture and the repository. Waitun
-              owns testing, the tally board sketch and the report.
-            </p>
-            <p>
-              <Space split="·" wrap>
-                <Link href="https://github.com/RobertCheer/ICT304" target="_blank">Code and reports</Link>
-                <Link href="https://www.kaggle.com/code/nivalagappan/ecosort-ai-sub-system-prototype" target="_blank">Notebook</Link>
-                <Link href="https://www.kaggle.com/datasets/nivalagappan/ecosort-trashnet-resized" target="_blank">Dataset</Link>
-                <Link href="https://huggingface.co/datasets/garythung/trashnet" target="_blank">TrashNet (original)</Link>
-              </Space>
-            </p>
-            <p>
-              Every figure is from the 27 September 2026 run; the full log sits with the notebook
-              on Kaggle. AI tools helped write and review this page, declared in the project report.
-            </p>
-          </div>
-        </Layout.Footer>
+                  <Band
+                    id="teachers"
+                    n="02 · Two ways to teach a machine"
+                    title="A rulebook, or a well-read apprentice"
+                  >
+                    <Row gutter={[16, 16]}>
+                      <Col xs={24} md={12}>
+                        <Card
+                          className="panel lift"
+                          style={{ height: "100%" }}
+                          title="The measurer"
+                        >
+                          <Flex justify="center" style={{ marginBottom: 10 }}>
+                            <Progress
+                              type="dashboard"
+                              percent={71.1}
+                              strokeColor="#8496a8"
+                              size={150}
+                              format={(p) => (
+                                <span style={{ fontSize: 22, fontWeight: 700 }}>
+                                  {p.toFixed(1)}%
+                                </span>
+                              )}
+                            />
+                          </Flex>
+                          <ul
+                            style={{
+                              paddingLeft: 18,
+                              margin: 0,
+                              color: "#43514a",
+                            }}
+                          >
+                            {bullets.map((b) => (
+                              <li key={b} style={{ marginBottom: 6 }}>
+                                {b}
+                              </li>
+                            ))}
+                          </ul>
+                        </Card>
+                      </Col>
+                      <Col xs={24} md={12}>
+                        <Badge.Ribbon
+                          text="best score, and the one we would ship"
+                          color="green"
+                        >
+                          <Card
+                            className="panel lift"
+                            style={{ height: "100%" }}
+                            title="The apprentice"
+                          >
+                            <Flex justify="center" style={{ marginBottom: 10 }}>
+                              <Progress
+                                type="dashboard"
+                                percent={77.6}
+                                strokeColor="#2e7d32"
+                                size={150}
+                                format={(p) => (
+                                  <span
+                                    style={{ fontSize: 22, fontWeight: 700 }}
+                                  >
+                                    {p.toFixed(1)}%
+                                  </span>
+                                )}
+                              />
+                            </Flex>
+                            <ul
+                              style={{
+                                paddingLeft: 18,
+                                margin: 0,
+                                color: "#43514a",
+                              }}
+                            >
+                              {bullets2.map((b) => (
+                                <li key={b} style={{ marginBottom: 6 }}>
+                                  {b}
+                                </li>
+                              ))}
+                            </ul>
+                          </Card>
+                        </Badge.Ribbon>
+                      </Col>
+                    </Row>
+                    <p
+                      className="lead"
+                      style={{ marginTop: 16, marginBottom: 0 }}
+                    >
+                      Same 380 held-back photos for both. Both answer in about
+                      three milliseconds, far inside the brief's one-second
+                      limit.
+                    </p>
+                  </Band>
 
-      </Layout>
-    </ConfigProvider>
-  );
-}
+                  <Band
+                    id="results"
+                    n="03 · Right and wrong, kind by kind"
+                    title="Where it holds up, and where it slips"
+                  >
+                    <Table
+                      className="panel"
+                      columns={columns}
+                      dataSource={classRows}
+                      pagination={false}
+                      size="middle"
+                      scroll={{ x: "max-content" }}
+                    />
+                    <div className="cap" style={{ marginTop: 8 }}>
+                      Hover a column heading for what the number means. Green
+                      marks the winner per row.
+                    </div>
+                    <Row gutter={[16, 16]} style={{ marginTop: 22 }}>
+                      <Col xs={24} md={12}>
+                        <Pic
+                          src="img/cm_SVM.png"
+                          alt="Where the measurer guessed right and wrong"
+                          caption="The measurer. Rows: what the item really was. Columns: what it guessed. Dark diagonal is correct."
+                        />
+                      </Col>
+                      <Col xs={24} md={12}>
+                        <Pic
+                          src="img/cm_MobileNetV2.png"
+                          alt="Where the apprentice guessed right and wrong"
+                          caption="The apprentice. Cleaner diagonal. Usual slip: glass read as plastic, both clear and shiny."
+                        />
+                      </Col>
+                    </Row>
+                  </Band>
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
-</script>
-</body>
+                  <Band
+                    id="trash"
+                    n="04 · The hard one"
+                    title="Trash is rare, and that is the problem"
+                  >
+                    <Row gutter={[16, 16]}>
+                      <Col xs={24} sm={8}>
+                        <Card className="panel" size="small">
+                          <Statistic
+                            title="Trash photos in the whole set"
+                            value={137}
+                            valueStyle={{ color: "#c62828", fontWeight: 700 }}
+                          />
+                        </Card>
+                      </Col>
+                      <Col xs={24} sm={8}>
+                        <Card className="panel" size="small">
+                          <Statistic
+                            title="What it scores on that kind (F1)"
+                            value={0.5}
+                            precision={2}
+                            valueStyle={{ color: "#c62828", fontWeight: 700 }}
+                          />
+                        </Card>
+                      </Col>
+                      <Col xs={24} sm={8}>
+                        <Card className="panel" size="small">
+                          <Tooltip title="How much extra those rare photos counted during training.">
+                            <Statistic
+                              title="Extra weight given in training"
+                              value={3.07}
+                              precision={2}
+                              suffix="x"
+                              valueStyle={{ color: "#1f2937", fontWeight: 700 }}
+                            />
+                          </Tooltip>
+                        </Card>
+                      </Col>
+                    </Row>
+                    <p
+                      className="lead"
+                      style={{ marginTop: 16, marginBottom: 0 }}
+                    >
+                      Against 594 paper photos, the odds and ends barely show
+                      up. We weighted them up during training and report the
+                      weak score openly. The honest fix is more examples of
+                      trash.
+                    </p>
+                  </Band>
+
+                  <Band
+                    id="data"
+                    n="05 · The photos it learned from"
+                    title="2,527 photos, split three ways"
+                  >
+                    <Row gutter={[16, 16]}>
+                      <Col xs={24} sm={8}>
+                        <Card className="panel" size="small">
+                          <Statistic
+                            title="Teach the model (70%)"
+                            value={1768}
+                            valueStyle={{ fontWeight: 700 }}
+                          />
+                        </Card>
+                      </Col>
+                      <Col xs={24} sm={8}>
+                        <Card className="panel" size="small">
+                          <Statistic
+                            title="Check progress (15%)"
+                            value={379}
+                            valueStyle={{ fontWeight: 700 }}
+                          />
+                        </Card>
+                      </Col>
+                      <Col xs={24} sm={8}>
+                        <Card className="panel" size="small">
+                          <Statistic
+                            title="Final exam (15%)"
+                            value={380}
+                            valueStyle={{ color: "#2e7d32", fontWeight: 700 }}
+                          />
+                        </Card>
+                      </Col>
+                    </Row>
+                    <div className="cap" style={{ marginTop: 8 }}>
+                      Locked with seed 42, so the same photos land in each part
+                      on every run.
+                    </div>
+                    <Row gutter={[16, 16]} style={{ marginTop: 22 }}>
+                      {counts.map(([name, n, color]) => (
+                        <Col xs={24} sm={12} md={8} key={name}>
+                          <Card className="panel" size="small">
+                            <Text>{name}</Text>
+                            <Progress
+                              percent={Math.round((n / 594) * 100)}
+                              strokeWidth={8}
+                              strokeColor={color}
+                              format={() => n + " photos"}
+                            />
+                          </Card>
+                        </Col>
+                      ))}
+                    </Row>
+                    <Row gutter={[16, 16]} style={{ marginTop: 22 }}>
+                      <Col xs={24} md={12}>
+                        <Pic
+                          src="img/class_distribution.png"
+                          alt="Counts of photos per kind"
+                          caption="Trash is the smallest pile by far: 137 images against 594 for paper."
+                        />
+                      </Col>
+                      <Col xs={24} md={12}>
+                        <Pic
+                          src="img/mobilenetv2_training.png"
+                          alt="Training curves"
+                          caption="Each round of training raised accuracy and lowered loss until the curves flattened."
+                        />
+                      </Col>
+                    </Row>
+                  </Band>
+
+                  <Band
+                    id="run"
+                    n="06 · Run it yourself"
+                    title="Three ways to see it work"
+                  >
+                    <Tabs
+                      items={[
+                        {
+                          key: "kaggle",
+                          label: "Kaggle (easiest)",
+                          children: (
+                            <>
+                              <p className="lead">
+                                Press Save &amp; Run All. Nothing to install:
+                                the data and the pretrained model travel with
+                                the notebook, and it runs without internet.
+                              </p>
+                              <Space wrap>
+                                <Button
+                                  type="primary"
+                                  href="https://www.kaggle.com/code/nivalagappan/ecosort-ai-sub-system-prototype"
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  Open the notebook
+                                </Button>
+                                <Text type="secondary">
+                                  Public: read every cell and its output without
+                                  an account.
+                                </Text>
+                              </Space>
+                            </>
+                          ),
+                        },
+                        {
+                          key: "colab",
+                          label: "Google Colab",
+                          children: (
+                            <>
+                              <p className="lead">
+                                Upload the notebook from the repository, then
+                                Runtime, then Run all. It fetches the dataset
+                                (about 3.6 GB) the first time.
+                              </p>
+                              <Text code>
+                                EcoSort_AI_Prototype_vscode.ipynb
+                              </Text>
+                            </>
+                          ),
+                        },
+                        {
+                          key: "local",
+                          label: "Your own computer",
+                          children: (
+                            <>
+                              <p className="lead" style={{ marginBottom: 4 }}>
+                                Install, then run the notebook or the script. A
+                                laptop takes 20 to 40 minutes.
+                              </p>
+                              <code className="mono">
+                                pip install tensorflow scikit-learn scikit-image
+                                huggingface_hub matplotlib seaborn pillow
+                              </code>
+                            </>
+                          ),
+                        },
+                      ]}
+                    />
+                    <Card
+                      className="panel"
+                      style={{ marginTop: 8 }}
+                      title="Run facts"
+                    >
+                      <Descriptions
+                        column={{ xs: 1, sm: 2 }}
+                        size="small"
+                        items={facts.map(([k, v]) => ({
+                          key: k,
+                          label: k,
+                          children: v,
+                        }))}
+                      />
+                    </Card>
+                  </Band>
+
+                  <Band
+                    id="status"
+                    n="07 · Status"
+                    title="Done, and what comes next"
+                  >
+                    <Steps
+                      direction="vertical"
+                      size="small"
+                      current={3}
+                      items={[
+                        {
+                          title: "Photos loaded, cleaned and split",
+                          description: "Done. The same split on every run.",
+                        },
+                        {
+                          title: "Both classifiers trained and tested",
+                          description: "Done. The numbers on this page.",
+                        },
+                        {
+                          title: "Comparison and a one-photo demo",
+                          description: "Done. See the demo below.",
+                        },
+                        {
+                          title: "Camera capture and bin routing",
+                          description: "November. The physical side.",
+                        },
+                        {
+                          title: "Human review for unsure items",
+                          description: "November. A person, not a bin.",
+                        },
+                        {
+                          title: "Logging, tally board, operator screen",
+                          description: "November. For the people running it.",
+                        },
+                        {
+                          title: "Demo video and presentation",
+                          description: "November. The whole machine.",
+                        },
+                      ]}
+                    />
+                    <Row gutter={[16, 16]} style={{ marginTop: 18 }}>
+                      <Col xs={24} md={12}>
+                        <Pic
+                          src="img/demo_prediction.png"
+                          alt="One-photo demo"
+                          caption="The demo: a held-back photo of metal. The measurer says 0.62 confident, the apprentice 0.68."
+                        />
+                      </Col>
+                      <Col xs={24} md={12}>
+                        <Pic
+                          src="img/samples_per_class.png"
+                          alt="One sample photo per kind"
+                          caption="One sample from each kind, straight from the dataset."
+                        />
+                      </Col>
+                    </Row>
+                  </Band>
+
+                  <Band
+                    id="answers"
+                    n="08 · Straight answers"
+                    title="The parts we would rather you heard from us"
+                  >
+                    <Space
+                      direction="vertical"
+                      size="middle"
+                      style={{ width: "100%" }}
+                    >
+                      <Alert
+                        type="warning"
+                        showIcon
+                        message="77.6% is below the 85% target we set in the brief."
+                        description="Small 128-pixel inputs and eight rounds keep the notebook laptop-friendly. The path up is on our list, and one explainer below says how."
+                      />
+                      <Alert
+                        type="info"
+                        showIcon
+                        message="The bins, the review queue and the tally board do not exist yet."
+                        description="They are designed in the report and arrive in November. Nothing on this page is mocked up to look finished."
+                      />
+                    </Space>
+                    <Collapse style={{ marginTop: 16 }} items={explainers} />
+                  </Band>
+                </Image.PreviewGroup>
+              </Layout.Content>
+
+              <Layout.Footer className="foot" style={{ padding: 0 }}>
+                <div className="shell" style={{ paddingTop: 30 }}>
+                  <p>
+                    EcoSort is a team project for ICT304 at Murdoch University,
+                    2026. Nivetha built the classifier and this page. Robert
+                    owns the architecture and the repository. Waitun owns
+                    testing, the tally board sketch and the report.
+                  </p>
+                  <p>
+                    <Space split="·" wrap>
+                      <Link
+                        href="https://github.com/RobertCheer/ICT304"
+                        target="_blank"
+                      >
+                        Code and reports
+                      </Link>
+                      <Link
+                        href="https://www.kaggle.com/code/nivalagappan/ecosort-ai-sub-system-prototype"
+                        target="_blank"
+                      >
+                        Notebook
+                      </Link>
+                      <Link
+                        href="https://www.kaggle.com/datasets/nivalagappan/ecosort-trashnet-resized"
+                        target="_blank"
+                      >
+                        Dataset
+                      </Link>
+                      <Link
+                        href="https://huggingface.co/datasets/garythung/trashnet"
+                        target="_blank"
+                      >
+                        TrashNet (original)
+                      </Link>
+                    </Space>
+                  </p>
+                  <p>
+                    Every figure is from the 28 September 2026 run; the full log
+                    sits with the notebook on Kaggle. AI tools helped write and
+                    review this page, declared in the project report.
+                  </p>
+                </div>
+              </Layout.Footer>
+            </Layout>
+          </ConfigProvider>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
 </html>

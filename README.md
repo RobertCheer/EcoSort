@@ -18,6 +18,9 @@ Built for the Assignment (due 3 October 2026):
 - Evaluation: accuracy, per-class precision/recall/F1, confusion matrices, inference
   latency, comparison table
 - One-image inference demo returning `(class, confidence)`
+- An upload box (Step 7 in the notebook) so a reader can classify their own photo and see
+  both predictions with the routing decision, plus a file-path fallback where widgets
+  cannot run (a saved notebook cannot show live widgets; use Copy & Edit on Kaggle)
 
 Designed but not built yet (Final Project, due 7 November 2026): image capture,
 decision and bin-routing, which routes items whose confidence falls below a
@@ -27,32 +30,32 @@ exists in the team working folder; it is not connected to live data.
 
 ## Results
 
-Run on Kaggle (2× T4 GPU), 27 September 2026. Test set: 380 held-out images.
+Run on Kaggle (2× T4 GPU), 28 September 2026. Test set: 380 held-out images.
 Latency is averaged over the test set.
 
 | Technique | Accuracy | Macro-F1 | Latency |
 |---|---|---|---|
-| SVM (HOG + colour + GLCM) | 0.711 | 0.703 | 2.8 ms/image |
-| MobileNetV2 (transfer learning) | 0.792 | 0.756 | 2.9 ms/image |
+| SVM (HOG + colour + GLCM) | 0.711 | 0.703 | 2.6 ms/image |
+| MobileNetV2 (transfer learning) | 0.776 | 0.744 | 2.8 ms/image |
 
 Per-class F1 (test set, 380 images):
 
 | Class | SVM F1 | MobileNetV2 F1 |
 |---|---|---|
-| cardboard | 0.76 | 0.88 |
-| glass | 0.69 | 0.76 |
+| cardboard | 0.76 | 0.84 |
+| glass | 0.69 | 0.77 |
 | metal | 0.67 | 0.78 |
-| paper | 0.80 | 0.85 |
-| plastic | 0.64 | 0.77 |
+| paper | 0.80 | 0.83 |
+| plastic | 0.64 | 0.75 |
 | trash | 0.67 | 0.50 |
 
-Accuracy 0.792 sits below the REQ-01 target of 0.85. The settings behind this run are
+Accuracy 0.776 sits below the REQ-01 target of 0.85. The settings behind this run are
 deliberately small (IMG=128, 8 training epochs) so the notebook also finishes on a
 laptop CPU. We report it as measured; the report's Discussion covers the improvement
 path (larger input size, more epochs, the full hyperparameter grid, and a fine-tuning
-stage). Three runs of this exact notebook gave 0.755 (a laptop), 0.766 and 0.792 (Kaggle GPUs).
-The SVM result is reproducible to the digit, and the CNN moves a little between runs,
-which is expected and is discussed in the report.
+stage). Six runs of this exact notebook put MobileNetV2 between 0.755 (a laptop) and 0.792
+(Kaggle GPUs), while the SVM returned 0.711 every time. The CNN moves a little between
+runs, which is expected and is discussed in the report.
 
 ## Reproduce
 
