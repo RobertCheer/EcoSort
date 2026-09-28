@@ -100,9 +100,4 @@ guide, with prompts in the appendix.
 - Kaggle dataset (TrashNet resized + MobileNetV2 weights): <https://www.kaggle.com/datasets/nivalagappan/ecosort-trashnet-resized>
 - TrashNet upstream: <https://huggingface.co/datasets/garythung/trashnet>
 
-## A note on the executed notebook
 
-Kaggle's API does not export the executed notebook file, so the copy in this
-repository was assembled from the kernel run log and the per-cell inline images, with
-every number taken from that log. The log itself stays on Kaggle under
-version 3 of the notebook, so the figures and metrics here can be checked against it.
