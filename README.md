@@ -50,9 +50,9 @@ Accuracy 0.792 sits below the REQ-01 target of 0.85. The settings behind this ru
 deliberately small (IMG=128, 8 training epochs) so the notebook also finishes on a
 laptop CPU. We report it as measured; the report's Discussion covers the improvement
 path (larger input size, more epochs, the full hyperparameter grid, and a fine-tuning
-stage). Two runs of this exact notebook gave 0.766 and 0.792: the SVM result is
-reproducible to the digit, and the CNN moves a little between runs on GPU even with
-fixed seeds, which is expected.
+stage). Three runs of this exact notebook gave 0.755 (a laptop), 0.766 and 0.792 (Kaggle GPUs).
+The SVM result is reproducible to the digit, and the CNN moves a little between runs,
+which is expected and is discussed in the report.
 
 ## Reproduce
 
