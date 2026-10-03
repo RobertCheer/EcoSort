@@ -317,17 +317,17 @@ flowchart TD
       }
 
       const classRows = [
-        { key: "cardboard", item: "Cardboard", test: 60, svm: 0.76, cnn: 0.84 },
-        { key: "glass", item: "Glass", test: 76, svm: 0.69, cnn: 0.77 },
-        { key: "metal", item: "Metal", test: 62, svm: 0.67, cnn: 0.78 },
-        { key: "paper", item: "Paper", test: 89, svm: 0.8, cnn: 0.83 },
-        { key: "plastic", item: "Plastic", test: 73, svm: 0.64, cnn: 0.75 },
+        { key: "cardboard", item: "Cardboard", test: 60, svm: 0.76, cnn: 0.9 },
+        { key: "glass", item: "Glass", test: 76, svm: 0.69, cnn: 0.82 },
+        { key: "metal", item: "Metal", test: 62, svm: 0.67, cnn: 0.86 },
+        { key: "paper", item: "Paper", test: 89, svm: 0.8, cnn: 0.86 },
+        { key: "plastic", item: "Plastic", test: 73, svm: 0.64, cnn: 0.79 },
         {
           key: "trash",
           item: "Trash (odds and ends)",
           test: 20,
           svm: 0.67,
-          cnn: 0.5,
+          cnn: 0.7,
         },
       ];
 
@@ -428,10 +428,10 @@ flowchart TD
         ["Dataset", "TrashNet, 2,527 photos, six kinds"],
         ["Split", "70 / 15 / 15, fixed seed 42, identical on every run"],
         ["Entry level", "SVM on 1,900 hand-made measurements"],
-        ["Strongest", "MobileNetV2, 128-pixel inputs, eight rounds"],
+        ["Strongest", "MobileNetV2, 224-pixel inputs, twelve rounds"],
         [
           "Where it ran",
-          "Kaggle, 2 x T4 GPU, 28 September 2026, about 6 minutes",
+          "Kaggle, 2 x T4 GPU, 2 October 2026, about 8 minutes",
         ],
         ["Stack", "Python 3.12, TensorFlow 2.20.0, scikit-learn"],
       ];
@@ -460,13 +460,13 @@ flowchart TD
         },
         {
           key: "rounds",
-          label: "Why only eight rounds of training?",
+          label: "Why twelve rounds of training?",
           children: (
             <Paragraph>
-              The notebook is set to finish on an ordinary laptop: small
-              128-pixel photos, eight rounds, a compact search for settings.
-              Bigger inputs and more rounds should lift the score, and that is
-              the first thing on our list.
+              The notebook runs at 224-pixel inputs and twelve rounds on a free Kaggle
+              GPU, finishing in about eight minutes. The earlier runs used 128
+              pixels and eight rounds; the bigger input is what lifted the
+              score from 77.6% to 83.2%.
             </Paragraph>
           ),
         },
@@ -486,7 +486,7 @@ flowchart TD
           label: "Different runs, different scores?",
           children: (
             <Paragraph>
-              The same notebook gave between 75.5% and 79.2% across six runs on
+              At 128 pixels the same notebook gave between 75.5% and 80.3% across six runs on
 different machines. The measurer gave identical results every
 time. Small drift is normal
               when a graphics card does the training, and we say so in the
@@ -587,7 +587,7 @@ time. Small drift is normal
                         <Col xs={24} sm={12} lg={6}>
                           <Statistic
                             title="Correct on unseen photos"
-                            value={77.6}
+                            value={83.2}
                             suffix="%"
                             precision={1}
                             valueStyle={{ color: "#2e7d32", fontWeight: 700 }}
@@ -605,7 +605,7 @@ time. Small drift is normal
                         <Col xs={24} sm={12} lg={6}>
                           <Statistic
                             title="Time to judge one photo"
-                            value={2.8}
+                            value={3.7}
                             suffix="ms"
                             precision={1}
                             valueStyle={{ color: "#556" }}
@@ -696,7 +696,7 @@ time. Small drift is normal
                             <Flex justify="center" style={{ marginBottom: 10 }}>
                               <Progress
                                 type="dashboard"
-                                percent={77.6}
+                                percent={83.2}
                                 strokeColor="#2e7d32"
                                 size={150}
                                 format={(p) => (
@@ -1047,8 +1047,8 @@ time. Small drift is normal
                       <Alert
                         type="warning"
                         showIcon
-                        message="77.6% is below the 85% target we set in the brief."
-                        description="Small 128-pixel inputs and eight rounds keep the notebook laptop-friendly. The path up is on our list, and one explainer below says how."
+                        message="83.2% is just under the 85% target we set in the brief."
+                        description="224-pixel inputs and twelve rounds closed most of the gap. The rest comes from a small dataset and rare kinds, and the explainers below say how."
                       />
                       <Alert
                         type="info"
