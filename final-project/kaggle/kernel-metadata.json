@@ -1,0 +1,13 @@
+{
+  "id": "nivalagappan/ecosort-final-project-training",
+  "title": "EcoSort Final Project Training",
+  "code_file": "train_ecosort_224.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "dataset_sources": ["nivalagappan/ecosort-trashnet-resized"],
+  "competition_sources": [],
+  "kernel_sources": []
+}
