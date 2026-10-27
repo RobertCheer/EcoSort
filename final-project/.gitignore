@@ -11,7 +11,10 @@ dist/
 # Local caches and run artefacts
 .cache/
 logs/
-outputs/
+# Figures under outputs/analysis are part of the submission; the rest is
+# regenerated on each run, so it is ignored.
+outputs/verified/
+outputs/*.png
 
 # Notebook checkpoints
 .ipynb_checkpoints/
