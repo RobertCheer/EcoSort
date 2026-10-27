@@ -1,0 +1,25 @@
+{
+  "venvPath": ".",
+  "venv": ".venv",
+  "extraPaths": [
+    ".",
+    "tests",
+    ".venv/lib/python3.13/site-packages"
+  ],
+  "include": [
+    "ecosort",
+    "tests",
+    "app.py",
+    "reproduce_report.py"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "kaggle",
+    "outputs",
+    "logs"
+  ],
+  "pythonVersion": "3.13",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "warning",
+  "reportMissingTypeStubs": "none"
+}

@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environment
+.venv/
+
+# Local caches and run artefacts
+.cache/
+logs/
+outputs/
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS noise
+.DS_Store
+
+# Training intermediates that are not needed to run the system
+models/*.npz
