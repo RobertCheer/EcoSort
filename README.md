@@ -104,3 +104,48 @@ guide, with prompts in the appendix.
 - TrashNet upstream: <https://huggingface.co/datasets/garythung/trashnet>
 
 
+
+---
+
+## Final project — the integrated EcoSort station
+
+The assignment part of this repository contains the design documents and the
+sub-system prototype. The **final project** delivers the working system. It is in
+the [`final-project/`](final-project/) folder.
+
+| | Assignment (3 October) | Final project (7 November) |
+| --- | --- | --- |
+| What it is | Design plus one AI sub-system prototype | Seven sub-systems, integrated and runnable |
+| Best model | MobileNetV2 at 128 px, 0.776 | MobileNetV3 blended with MobileNetV2, **0.921** |
+| Interface | None | Streamlit station with a review queue |
+| Tests | None | 88 automated tests |
+
+### Run it
+
+```bash
+cd final-project
+./run.sh                 # http://localhost:8501
+```
+
+The trained models are committed, so no training step is needed.
+
+### What changed, and why
+
+| Step | Technique | Accuracy |
+| --- | --- | --- |
+| 1 | SVM on hand-crafted features | 0.711 |
+| 2 | Small CNN from a random start | 0.692 |
+| 3 | MobileNetV2, frozen backbone | 0.813 |
+| 4 | MobileNetV2, full fine-tune | 0.887 |
+| 5 | MobileNetV3-Large, Recipe D | 0.913 |
+| 6 | **CNN blend of steps 4 and 5** | **0.921** |
+
+Every number is scored on the same 380 held-out images. The full discussion, the
+figures and the limitations are in [`final-project/README.md`](final-project/README.md).
+
+### Check the numbers
+
+```bash
+cd final-project
+python scripts/reproduce_report.py    # re-derives every recorded number
+```
