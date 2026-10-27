@@ -22,5 +22,5 @@ outputs/*.png
 # OS noise
 .DS_Store
 
-# Training intermediates that are not needed to run the system
-models/*.npz
+# Saved probabilities are small and reproduce_report.py needs them to
+# re-check every number without retraining.
