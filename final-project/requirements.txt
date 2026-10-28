@@ -1,0 +1,24 @@
+# Runtime dependencies for the EcoSort station.
+#
+# Install with:  pip install -r requirements.txt
+# The launcher ./run.sh does this automatically inside .venv.
+#
+# TensorFlow is the only heavy dependency, and it is optional: without it the
+# station falls back to the SVM backend on hand-crafted features.
+
+numpy>=1.24
+pillow>=9.1
+# Pinned to the version that produced svm_hog_glcm.pkl. Unpickling the pipeline with
+# a different minor version can change predictions silently.
+scikit-learn>=1.6,<1.7
+scikit-image>=0.21
+pandas>=2.0
+matplotlib>=3.7
+joblib>=1.3
+streamlit>=1.30
+
+# The MobileNetV3 backend. Needs Python 3.10 or newer.
+tensorflow>=2.16
+
+# Tests and the analysis scripts.
+pytest>=7.4
