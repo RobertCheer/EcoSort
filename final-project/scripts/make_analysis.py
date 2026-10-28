@@ -18,9 +18,24 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-MODEL_DIR = HERE / "models"
+
+def _find_dir(name: str, start: Path) -> Path:
+    """Locate a project folder from wherever this script sits.
+
+    The scripts live in ``scripts/`` in the repository and at the project root in a
+    working copy, so a fixed relative path breaks in one of the two. Search this
+    folder first, then the parents.
+    """
+    for base in [start] + list(start.parents):
+        candidate = base / name
+        if candidate.is_dir():
+            return candidate
+    return start / name
+
+
+MODEL_DIR = _find_dir("models", HERE)
 PREV_DIR = MODEL_DIR                   # both CNN artefacts ship together
-OUT = HERE / "outputs" / "analysis"
+OUT = _find_dir("outputs", HERE) / "analysis"
 
 COLOURS = {
     "svm": "#90A4AE",
@@ -149,7 +164,6 @@ def plot_per_class(class_svm: dict, class_cnn: dict, path: Path) -> None:
 def plot_confusions(y: np.ndarray, pairs: list[tuple[str, np.ndarray, str]],
                     names: list[str], path: Path) -> None:
     plt = _setup()
-    import matplotlib as mpl
 
     fig, axes = plt.subplots(1, len(pairs), figsize=(6.4 * len(pairs), 5.4),
                              constrained_layout=True)
@@ -175,7 +189,9 @@ def plot_confusions(y: np.ndarray, pairs: list[tuple[str, np.ndarray, str]],
         ax.set_ylabel("True class")
         ax.set_title(f"{title}\ntest accuracy {accuracy:.3f}  (n = {cm.sum()})", fontsize=11)
         ax.grid(visible=False)
-        fig.colorbar(mpl.cm.ScalarMappable(norm=mpl.colors.Normalize(0, cm.max()), cmap="Blues"),
+        from matplotlib.cm import ScalarMappable
+        from matplotlib.colors import Normalize
+        fig.colorbar(ScalarMappable(norm=Normalize(0, cm.max()), cmap="Blues"),
                      ax=ax, shrink=0.82, pad=0.03, label="number of items")
     fig.suptitle("Confusion matrices on the held-out test set", fontsize=12, fontweight="bold")
     fig.savefig(path, bbox_inches="tight")
@@ -269,7 +285,7 @@ def plot_stress(rows: list[tuple[str, float, float]], path: Path) -> None:
     values = [r[1] for r in rows]
 
     fig, ax = plt.subplots(figsize=(10, 4.4), constrained_layout=True)
-    y = np.arange(len(rows))
+    y = list(range(len(rows)))
     colours = ["#2E7D32" if v >= 0.85 else ("#F9A825" if v >= 0.6 else "#C62828") for v in values]
     ax.barh(y, values, color=colours, edgecolor="white")
     ax.set_yticks(y)
@@ -282,7 +298,8 @@ def plot_stress(rows: list[tuple[str, float, float]], path: Path) -> None:
     ax.legend(loc="lower right", fontsize=9)
     ax.grid(axis="y", visible=False)
     for yi, value in zip(y, values):
-        ax.text(value + 0.012, yi, f"{value:.3f}", va="center", fontsize=9, fontweight="bold")
+        ax.text(float(value) + 0.012, float(yi), f"{value:.3f}", va="center",
+                fontsize=9, fontweight="bold")
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)
 
@@ -546,10 +563,10 @@ def main() -> int:
                     "stress": stress,
                     "latency": latency},
                    [(j[0], j[1], j[2]) for j in journey],
-                   HERE / "RESULTS.md")
+                   _find_dir("models", HERE).parent / "RESULTS.md")
 
     print(f"figures -> {OUT}")
-    print(f"document -> {HERE / 'RESULTS.md'}")
+    print(f"document -> {_find_dir('models', HERE).parent / 'RESULTS.md'}")
     print("\nheadline")
     for label, value, _ in journey:
         print(f"  {label.replace(chr(10), ' '):38s} {value:.4f}")

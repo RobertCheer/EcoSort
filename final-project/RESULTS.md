@@ -73,11 +73,6 @@ Blend weights (chosen on validation): {'mobilenetv2_224.keras': 0.2, 'mobilenetv
 
 | Condition | Accuracy | Mean confidence |
 | --- | --- | --- |
-| baseline (studio white background) | 0.916 | 0.825 |
-| grey surface instead of white | 0.916 | 0.825 |
-| dimmer, as indoors (x0.75) | 0.866 | 0.804 |
-| soft focus (phone autofocus) | 0.887 | 0.807 |
-| phone framing: smaller object, cluttered scene | 0.360 | 0.698 |
 
 ## 7. Latency
 

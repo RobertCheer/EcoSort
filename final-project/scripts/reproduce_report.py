@@ -27,6 +27,21 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 
+def _find_dir(name: str, start: Path) -> Path:
+    """Locate a project folder from wherever this script sits.
+
+    The scripts live in ``scripts/`` in the repository and at the project root in a
+    working copy, so a fixed relative path breaks in one of the two. Search this
+    folder first, then the parents.
+    """
+    for base in [start] + list(start.parents):
+        candidate = base / name
+        if candidate.is_dir():
+            return candidate
+    return start / name
+
+
+
 #: Reviewer-capacity budget. The training notebook fixes this, so the threshold
 #: must be reproducible from the saved validation probabilities alone.
 MAX_REVIEW_RATE = 0.10
@@ -207,9 +222,9 @@ def draw_figures(metrics: dict, cnn_test: np.ndarray, svm_test: np.ndarray,
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(__doc__ or "rebuild the report from saved artefacts").splitlines()[0])
-    parser.add_argument("--model-dir", type=Path, default=HERE / "models",
+    parser.add_argument("--model-dir", type=Path, default=_find_dir("models", HERE),
                         help="folder holding metrics.json, val_probs.npz, test_probs.npz")
-    parser.add_argument("--out-dir", type=Path, default=HERE / "outputs" / "verified",
+    parser.add_argument("--out-dir", type=Path, default=_find_dir("outputs", HERE) / "verified",
                         help="where redrawn figures are written")
     args = parser.parse_args(argv)
 

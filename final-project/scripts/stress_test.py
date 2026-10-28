@@ -27,6 +27,21 @@ from PIL import Image, ImageEnhance, ImageFilter
 from ecosort.classifier import CNN_MODEL_FILES
 
 HERE = Path(__file__).resolve().parent
+
+def _find_dir(name: str, start: Path) -> Path:
+    """Locate a project folder from wherever this script sits.
+
+    The scripts live in ``scripts/`` in the repository and at the project root in a
+    working copy, so a fixed relative path breaks in one of the two. Search this
+    folder first, then the parents.
+    """
+    for base in [start] + list(start.parents):
+        candidate = base / name
+        if candidate.is_dir():
+            return candidate
+    return start / name
+
+
 CNN_INPUT = 224
 TABLE_BG = (150, 148, 145)
 
@@ -80,9 +95,9 @@ def encode(image: Image.Image) -> np.ndarray:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(__doc__ or "stress test").splitlines()[0])
-    parser.add_argument("--model-dir", type=Path, default=HERE / "models")
+    parser.add_argument("--model-dir", type=Path, default=_find_dir("models", HERE))
     parser.add_argument("--data-dir", type=Path, default=HERE.parent / "work" / "dataset-resized")
-    parser.add_argument("--out-dir", type=Path, default=HERE / "outputs" / "verified")
+    parser.add_argument("--out-dir", type=Path, default=_find_dir("outputs", HERE) / "verified")
     args = parser.parse_args(argv)
 
     try:
