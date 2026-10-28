@@ -351,6 +351,19 @@ is a property of the split, and we report it as a finding.
 2. Change to the project folder.
 3. Run `./run.sh`.
 
+The script makes a Python environment on the first run, installs the dependencies and
+starts the web interface. If you prefer to install by hand:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+`requirements.txt` lists every dependency. TensorFlow is the only heavy one, and it is
+optional: without it the station uses the SVM backend on hand-crafted features.
+
 The script makes a Python environment on the first run. The script installs the
 dependencies. The script starts the web interface at `http://localhost:8501`.
 
