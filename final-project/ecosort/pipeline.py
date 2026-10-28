@@ -266,7 +266,17 @@ class EcoSortSystem:
         return target
 
     def reset(self) -> None:
-        """Clear the log, the actuator and the dashboard for a fresh demo."""
+        """Clear the log, the actuator and the dashboard for a fresh demo.
+
+        The CSV is removed as well. Clearing memory alone left every old row on disk,
+        so the next append rewrote them and the log doubled.
+        """
         self.logger.clear()
         self.actuator.clear_history()
         self._counter = 0
+        try:
+            self.log_path.unlink(missing_ok=True)
+        except OSError as exc:
+            # A read-only or locked file must not break the reset; the in-memory
+            # log is already clear, so the station stays usable.
+            print(f"warning: could not remove {self.log_path}: {exc}")
