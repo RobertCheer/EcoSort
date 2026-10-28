@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import io
 from pathlib import Path
+from typing import Union
 
 import numpy as np
 from PIL import Image, UnidentifiedImageError
@@ -25,7 +26,10 @@ from skimage.feature import graycomatrix, graycoprops, hog
 
 from .config import CNN_INPUT_SIZE, SVM_INPUT_SIZE
 
-ImageSource = bytes | bytearray | str | Path | Image.Image | np.ndarray
+# Union[...] rather than ``A | B``: this alias is evaluated at import time, and
+# the ``|`` form raises TypeError on Python 3.9. The annotation form is fine
+# either way, but this line is an assignment, not an annotation.
+ImageSource = Union[bytes, bytearray, str, Path, Image.Image, np.ndarray]
 
 SUPPORTED_SUFFIXES = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 

@@ -111,7 +111,7 @@ def plot_journey(rows: list[tuple[str, float, str]], path: Path) -> None:
     ax.set_ylabel("Accuracy on the 380 held-out test images")
     ax.set_title("EcoSort — every technique tried, scored on one fixed split")
     ax.legend(loc="upper left", framealpha=0.95)
-    for bar, value in zip(bars, values, strict=True):
+    for bar, value in zip(bars, values):
         ax.text(bar.get_x() + bar.get_width() / 2, value + 0.012, f"{value:.3f}",
                 ha="center", va="bottom", fontsize=9, fontweight="bold")
     ax.grid(axis="x", visible=False)
@@ -155,10 +155,10 @@ def plot_confusions(y: np.ndarray, pairs: list[tuple[str, np.ndarray, str]],
                              constrained_layout=True)
     if len(pairs) == 1:
         axes = [axes]
-    for ax, (title, proba, _colour) in zip(axes, pairs, strict=True):
+    for ax, (title, proba, _colour) in zip(axes, pairs):
         n = len(names)
         cm = np.zeros((n, n), dtype=int)
-        for t, p in zip(y, proba.argmax(1), strict=True):
+        for t, p in zip(y, proba.argmax(1)):
             cm[int(t), int(p)] += 1
         accuracy = float(np.trace(cm) / cm.sum())
         im = ax.imshow(cm, cmap="Blues", vmin=0)
@@ -197,7 +197,7 @@ def plot_calibration(proba: np.ndarray, y: np.ndarray, path: Path) -> None:
     correct = (proba.argmax(1) == y).astype(float)
     edges = np.linspace(0.3, 1.0, 15)
     centres, accs, counts = [], [], []
-    for lo, hi in zip(edges[:-1], edges[1:], strict=True):
+    for lo, hi in zip(edges[:-1], edges[1:]):
         sel = (conf >= lo) & (conf < hi)
         if sel.sum() >= 5:
             centres.append((lo + hi) / 2)
@@ -210,7 +210,7 @@ def plot_calibration(proba: np.ndarray, y: np.ndarray, path: Path) -> None:
                     color="#C62828", alpha=0.10, label="overconfident region")
     ax.plot(centres, accs, "o-", c="#2E7D32", lw=1.8, ms=6,
             label="deployed blend, observed")
-    for cx, cy, cn in zip(centres, accs, counts, strict=True):
+    for cx, cy, cn in zip(centres, accs, counts):
         ax.annotate(str(cn), (cx, cy), textcoords="offset points", xytext=(0, 9),
                     ha="center", fontsize=7, color="#555555")
     mean_gap = float(np.mean(np.array(centres) - np.array(accs)))
@@ -256,7 +256,7 @@ def plot_theta_sweep(rows: list[dict], chosen: float, budget: float, path: Path)
     ax.axvline(chosen, ls=":", c="#37474F", lw=1.5)
     ax.annotate(f"chosen θ = {chosen:.2f}", (chosen, 0.97), xycoords=("data", "axes fraction"),
                 xytext=(6, 0), textcoords="offset points", fontsize=9, color="#37474F")
-    ax.axvspan(thetas[0], max(t for t, r in zip(thetas, reviews, strict=True) if r <= budget),
+    ax.axvspan(thetas[0], max(t for t, r in zip(thetas, reviews) if r <= budget),
                color="#2E7D32", alpha=0.07)
     ax.set_title("Routing threshold trade-off, measured on the validation set")
     fig.savefig(path, bbox_inches="tight")
@@ -281,7 +281,7 @@ def plot_stress(rows: list[tuple[str, float, float]], path: Path) -> None:
     ax.set_title("Where the model stops working — sensitivity to capture conditions")
     ax.legend(loc="lower right", fontsize=9)
     ax.grid(axis="y", visible=False)
-    for yi, value in zip(y, values, strict=True):
+    for yi, value in zip(y, values):
         ax.text(value + 0.012, yi, f"{value:.3f}", va="center", fontsize=9, fontweight="bold")
     fig.savefig(path, bbox_inches="tight")
     plt.close(fig)

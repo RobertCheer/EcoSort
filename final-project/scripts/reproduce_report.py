@@ -145,7 +145,7 @@ def draw_figures(metrics: dict, cnn_test: np.ndarray, svm_test: np.ndarray,
     for name, proba, fname in [("SVM", svm_test, "cm_SVM.png"),
                                ("MobileNetV2", cnn_test, "cm_MobileNetV2.png")]:
         cm = np.zeros((len(labels), len(labels)), dtype=int)
-        for true, pred in zip(y_test, proba.argmax(1), strict=True):
+        for true, pred in zip(y_test, proba.argmax(1)):
             cm[int(true), int(pred)] += 1
         fig, ax = plt.subplots(figsize=(6, 5))
         im = ax.imshow(cm, cmap="Blues")
@@ -196,7 +196,7 @@ def draw_figures(metrics: dict, cnn_test: np.ndarray, svm_test: np.ndarray,
         ax.set_ylabel("held-out test accuracy")
         ax.set_title("EcoSort technique comparison (same split, same metrics)")
         ax.legend(loc="lower right")
-        for bar, mean in zip(bars, means, strict=True):
+        for bar, mean in zip(bars, means):
             ax.text(bar.get_x() + bar.get_width() / 2, mean + 0.02, f"{mean:.3f}",
                     ha="center", fontsize=9)
         fig.tight_layout()
