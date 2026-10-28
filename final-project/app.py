@@ -35,6 +35,7 @@ from ecosort.classifier import (
 from ecosort.config import MODEL_DIR, class_names, theta_for_backend
 from ecosort.logging_db import WasteClass
 from ecosort.pipeline import EcoSortSystem
+from ecosort.routing import route
 from ecosort.preprocess import InvalidImageError
 from ecosort.routing import DESTINATION_LABELS
 
@@ -278,19 +279,35 @@ def render_sort_item(system: EcoSortSystem) -> None:
             st.info("Capture an item to see the classification and routing decision.")
             return
 
-        try:
-            # Unposed captures (an upload or a camera frame) get the robust
-            # multi-scale pass. Held-out samples are studio images that already
-            # fill the frame, and the extra passes would cost accuracy there.
-            robust = mode != "Use a held-out sample"
-            result = system.process(image_bytes, true_class=true_class, robust=robust,
-                                    item_id=next_item_id(system), source_path=source_path)
-        except InvalidImageError as exc:
-            st.error(f"Could not read that image: {exc}")
-            return
-        except BackendUnavailableError as exc:
-            st.error(str(exc))
-            return
+        # Unposed captures (an upload or a camera frame) get the robust multi-scale
+        # pass. Held-out samples are studio images that already fill the frame, and
+        # the extra passes would cost accuracy there.
+        robust = mode != "Use a held-out sample"
+
+        # A photo is classified ONCE. Streamlit reruns the whole script whenever any
+        # widget changes, so without this guard every movement of the threshold
+        # slider classified the same photo again and logged a duplicate row.
+        signature = (
+            hash(bytes(image_bytes)),
+            system.classifier.backend,
+            robust,
+            true_class,
+        )
+        cached = st.session_state.get("last_item")
+        if cached and cached.get("signature") == signature:
+            result = cached["result"]
+        else:
+            try:
+                result = system.process(
+                    image_bytes, true_class=true_class, robust=robust,
+                    item_id=next_item_id(system), source_path=source_path)
+            except InvalidImageError as exc:
+                st.error(f"Could not read that image: {exc}")
+                return
+            except BackendUnavailableError as exc:
+                st.error(str(exc))
+                return
+            st.session_state.last_item = {"signature": signature, "result": result}
 
         # Keep the photo so the review queue can show it, keyed by the logged id.
         # Keep the photo for every review item so the queue can show it. A held-out
@@ -299,6 +316,18 @@ def render_sort_item(system: EcoSortSystem) -> None:
             if "review_images" not in st.session_state:
                 st.session_state.review_images = {}
             st.session_state.review_images[result.item_id] = image_bytes
+
+        # The recorded decision was made at the threshold recorded with it. If the
+        # slider has moved since, say so rather than letting the card look current.
+        recorded_theta = result.decision.theta
+        if abs(recorded_theta - system.theta) > 1e-9:
+            live = route(result.prediction, theta=system.theta)
+            st.warning(
+                f"This item was recorded at θ = {recorded_theta:.0%}. The slider is now "
+                f"{system.theta:.0%}, which would send it to **{live.destination_label}**"
+                f"{' (a person)' if live.is_review else ''}. Process the item again to "
+                f"record that decision."
+            )
 
         decision_card(result)
         actuation_panel(result)
@@ -542,10 +571,21 @@ def render_review(system: EcoSortSystem) -> None:
                     "sample or the batch evaluation always stores one. If this keeps "
                     "happening, press **Reset the log** and process items again."
                 )
-        st.caption(
-            f"Model said **{entry.predicted_class.value}** at "
-            f"**{entry.confidence:.0%}** — below θ, so it came here."
-        )
+        # State the threshold that actually applied. "below theta" with no number
+        # read as a contradiction when the slider had moved since the decision, and
+        # {:.0%} rounding hid a value like 0.8995 behind "90%".
+        if entry.theta is not None:
+            st.caption(
+                f"Model said **{entry.predicted_class.value}** at "
+                f"**{entry.confidence:.1%}**. The threshold in force was "
+                f"**{entry.theta:.0%}**, so the station held the item."
+            )
+        else:
+            st.caption(
+                f"Model said **{entry.predicted_class.value}** at "
+                f"**{entry.confidence:.1%}**. This row predates threshold recording, "
+                f"so the exact threshold is not stored."
+            )
 
     with right:
         # A reviewer needs a recommendation, not just a number.
@@ -559,14 +599,21 @@ def render_review(system: EcoSortSystem) -> None:
         # Use the threshold that applied to THIS item. The slider may have moved
         # since, and quoting the new value made the sentence contradict itself
         # ("78% confidence, which is below the 60% threshold").
-        applied = entry.theta if entry.theta is not None else system.theta
-        st.markdown(
-            f"The model identified this as **{entry.predicted_class.value}** "
-            f"with **{entry.confidence:.0%}** confidence. The threshold in force was "
-            f"**{applied:.0%}**, so the station held the item instead of opening a "
-            f"bin.{second_line} Confirm the class below, and the station will open "
-            f"that bin."
-        )
+        if entry.theta is None:
+            st.markdown(
+                f"The model identified this as **{entry.predicted_class.value}** with "
+                f"**{entry.confidence:.1%}** confidence.{second_line} This row predates "
+                f"threshold recording. Confirm the class below, and the station will "
+                f"open that bin."
+            )
+        else:
+            st.markdown(
+                f"The model identified this as **{entry.predicted_class.value}** with "
+                f"**{entry.confidence:.1%}** confidence, below the **{entry.theta:.0%}** "
+                f"threshold that applied when it was sorted, so the station held it "
+                f"instead of opening a bin.{second_line} Confirm the class below, and "
+                f"the station will open that bin."
+            )
         st.info(REVIEW_GUIDE.get(entry.predicted_class.value, ""))
         hint = CONFUSION_HINT.get(
             frozenset({entry.predicted_class.value, runner})) if runner else None
@@ -577,7 +624,7 @@ def render_review(system: EcoSortSystem) -> None:
         classes = [c.value for c in WasteClass]
         for row in range(0, len(classes), 3):
             button_cols = st.columns(3)
-            for col, class_name in zip(button_cols, classes[row:row + 3], strict=False):
+            for col, class_name in zip(button_cols, classes[row:row + 3]):
                 if col.button(class_name.title(), key=f"res_{entry.item_id}_{class_name}",
                               use_container_width=True):
                     decided = system.logger.resolve_review(
@@ -894,6 +941,8 @@ def main() -> None:
 
         if st.button("Reset the log"):
             system.reset()
+            for key in ("review_images", "last_item", "item_seq"):
+                st.session_state.pop(key, None)
             st.rerun()
 
         st.divider()
