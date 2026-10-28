@@ -6,7 +6,9 @@ build-backend = "setuptools.build_meta"
 name = "ecosort"
 version = "1.0.0"
 description = "EcoSort — intelligent recycling sorting system (ICT304 final project)"
-requires-python = ">=3.10"
+# The package itself runs on 3.9. TensorFlow, and therefore the MobileNetV3
+# backend, needs 3.10 or newer; on 3.9 the SVM backend is used instead.
+requires-python = ">=3.9"
 dependencies = [
     "numpy>=1.24",
     "pillow>=9.1",
