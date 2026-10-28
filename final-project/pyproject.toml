@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ecosort"
+version = "1.0.0"
+description = "EcoSort — intelligent recycling sorting system (ICT304 final project)"
+# The package itself runs on 3.9. TensorFlow, and therefore the MobileNetV3
+# backend, needs 3.10 or newer; on 3.9 the SVM backend is used instead.
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.24",
+    "pillow>=9.1",
+    # Pinned to the version that produced svm_hog_glcm.pkl. Unpickling a
+    # scikit-learn pipeline with a different minor version can change
+    # predictions silently, which would break reproducibility of the report.
+    "scikit-learn>=1.6,<1.7",
+    "scikit-image>=0.21",
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "joblib>=1.3",
+    "streamlit>=1.30",
+]
+
+[project.optional-dependencies]
+# The MobileNetV2 backend. Install where TensorFlow works; the SVM fallback
+# covers everything else.
+cnn = ["tensorflow>=2.16"]
+dev = ["pytest>=7.4", "pytest-cov>=4.1"]
+
+[tool.setuptools]
+packages = ["ecosort"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-ra"

@@ -1,0 +1,12 @@
+{
+  "class_names": [
+    "cardboard",
+    "glass",
+    "metal",
+    "paper",
+    "plastic",
+    "trash"
+  ],
+  "cnn_img": 224,
+  "svm_img": 128
+}

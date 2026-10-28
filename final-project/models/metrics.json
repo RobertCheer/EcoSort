@@ -1,0 +1,417 @@
+{
+  "generated_utc": "2026-10-24T07:30:18Z",
+  "settings": {
+    "cnn_img": 224,
+    "svm_img": 128,
+    "seed": 42,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "split": [
+      1768,
+      379,
+      380
+    ],
+    "svm_best_params": {
+      "svc__C": 10,
+      "svc__gamma": "scale"
+    },
+    "recipe_a": {
+      "head_epochs": 16,
+      "ft_epochs": 4,
+      "ft_layers": 40
+    },
+    "recipe_b": {
+      "head_epochs": 12,
+      "ft_epochs": 18,
+      "ft_layers": "all",
+      "lr_head": 0.001,
+      "lr_ft": 0.0001,
+      "schedule": "ReduceLROnPlateau"
+    },
+    "recipe_c": {
+      "epochs": 30,
+      "lr": 0.001
+    },
+    "recipe_d": {
+      "epochs": 12,
+      "warm_epochs": 2,
+      "head_lr": 0.001,
+      "backbone_lr": 0.0003,
+      "weight_decay": 0.02,
+      "label_smoothing": 0.1,
+      "select_best": false
+    },
+    "precision": "float32",
+    "batch": 32
+  },
+  "resize_filter": "PIL BILINEAR at (size, size), shared by training and serving",
+  "svm": {
+    "accuracy": 0.7105,
+    "macro_f1": 0.7014,
+    "per_class": {
+      "cardboard": {
+        "precision": 0.7719,
+        "recall": 0.7333,
+        "f1-score": 0.7521,
+        "support": 60.0
+      },
+      "glass": {
+        "precision": 0.6463,
+        "recall": 0.6974,
+        "f1-score": 0.6709,
+        "support": 76.0
+      },
+      "metal": {
+        "precision": 0.6377,
+        "recall": 0.7097,
+        "f1-score": 0.6718,
+        "support": 62.0
+      },
+      "paper": {
+        "precision": 0.8193,
+        "recall": 0.764,
+        "f1-score": 0.7907,
+        "support": 89.0
+      },
+      "plastic": {
+        "precision": 0.6667,
+        "recall": 0.6849,
+        "f1-score": 0.6757,
+        "support": 73.0
+      },
+      "trash": {
+        "precision": 0.7857,
+        "recall": 0.55,
+        "f1-score": 0.6471,
+        "support": 20.0
+      }
+    },
+    "latency_ms": 10.962
+  },
+  "cnn": {
+    "accuracy": 0.9211,
+    "macro_f1": 0.9066,
+    "per_class": {
+      "cardboard": {
+        "precision": 0.9808,
+        "recall": 0.85,
+        "f1-score": 0.9107,
+        "support": 60.0
+      },
+      "glass": {
+        "precision": 0.9136,
+        "recall": 0.9737,
+        "f1-score": 0.9427,
+        "support": 76.0
+      },
+      "metal": {
+        "precision": 0.9077,
+        "recall": 0.9516,
+        "f1-score": 0.9291,
+        "support": 62.0
+      },
+      "paper": {
+        "precision": 0.8788,
+        "recall": 0.9775,
+        "f1-score": 0.9255,
+        "support": 89.0
+      },
+      "plastic": {
+        "precision": 0.9697,
+        "recall": 0.8767,
+        "f1-score": 0.9209,
+        "support": 73.0
+      },
+      "trash": {
+        "precision": 0.8824,
+        "recall": 0.75,
+        "f1-score": 0.8108,
+        "support": 20.0
+      }
+    },
+    "recipe": "D_mobilenetv3",
+    "seed": 42,
+    "tta": "mean of plain and horizontal flip",
+    "latency_ms": 123.435,
+    "latency_tta_ms": 246.869
+  },
+  "ensemble": {
+    "description": "probability blend of the two CNN artefacts, weight chosen on validation",
+    "cnn_weights": {
+      "mobilenetv2_224.keras": 0.2,
+      "mobilenetv3_224.keras": 0.8
+    },
+    "val_accuracy": 0.934,
+    "test_accuracy": 0.9211,
+    "temperatures": {
+      "mobilenetv2_224.keras": 1.0,
+      "mobilenetv3_224.keras": 1.0
+    },
+    "calibration": "temperature scaling was fitted (V2 T=1.88, V3 T=0.75) and improved validation NLL from 0.531 to 0.414 and 0.336 to 0.309, but re-tuning the blend weight recovered no accuracy (0.9288 either way). It is therefore disabled: T=1.0 for both."
+  },
+  "recipes": {
+    "A_frozen_top40": {
+      "per_seed": [
+        {
+          "seed": 42,
+          "val_accuracy": 0.8232,
+          "test_accuracy": 0.8132
+        }
+      ],
+      "mean_test_accuracy": 0.8132,
+      "sd_test_accuracy": 0.0
+    },
+    "B_full_finetune": {
+      "per_seed": [
+        {
+          "seed": 42,
+          "val_accuracy": 0.8681,
+          "test_accuracy": 0.8868
+        }
+      ],
+      "mean_test_accuracy": 0.8868,
+      "sd_test_accuracy": 0.0
+    },
+    "C_from_scratch": {
+      "per_seed": [
+        {
+          "seed": 42,
+          "val_accuracy": 0.7414,
+          "test_accuracy": 0.6921
+        }
+      ],
+      "mean_test_accuracy": 0.6921,
+      "sd_test_accuracy": 0.0
+    },
+    "D_mobilenetv3": {
+      "per_seed": [
+        {
+          "seed": 42,
+          "val_accuracy": 0.9182,
+          "test_accuracy": 0.9105
+        },
+        {
+          "seed": 43,
+          "val_accuracy": 0.8997,
+          "test_accuracy": 0.9184
+        },
+        {
+          "seed": 44,
+          "val_accuracy": 0.8945,
+          "test_accuracy": 0.9105
+        }
+      ],
+      "mean_test_accuracy": 0.9131,
+      "sd_test_accuracy": 0.0037
+    }
+  },
+  "theta": {
+    "chosen": 0.6,
+    "max_review_rate": 0.1,
+    "by_backend": {
+      "cnn": 0.6,
+      "svm": 0.35
+    },
+    "chosen_review_rate": 0.0976,
+    "chosen_auto_accuracy": 0.9532,
+    "chosen_coverage": 0.9024,
+    "selection_rule": "highest auto-routed accuracy among thresholds whose review rate stays within the reviewer-capacity budget",
+    "sweep_cnn": [
+      {
+        "theta": 0.3,
+        "review_rate": 0.0,
+        "auto_coverage": 1.0,
+        "auto_accuracy": 0.934,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.35,
+        "review_rate": 0.0053,
+        "auto_coverage": 0.9947,
+        "auto_accuracy": 0.939,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.4,
+        "review_rate": 0.0185,
+        "auto_coverage": 0.9815,
+        "auto_accuracy": 0.9382,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.45,
+        "review_rate": 0.029,
+        "auto_coverage": 0.971,
+        "auto_accuracy": 0.9429,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.5,
+        "review_rate": 0.0528,
+        "auto_coverage": 0.9472,
+        "auto_accuracy": 0.9499,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.55,
+        "review_rate": 0.0686,
+        "auto_coverage": 0.9314,
+        "auto_accuracy": 0.949,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.6,
+        "review_rate": 0.0976,
+        "auto_coverage": 0.9024,
+        "auto_accuracy": 0.9532,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.65,
+        "review_rate": 0.1187,
+        "auto_coverage": 0.8813,
+        "auto_accuracy": 0.9551,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.7,
+        "review_rate": 0.1768,
+        "auto_coverage": 0.8232,
+        "auto_accuracy": 0.9679,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.75,
+        "review_rate": 0.219,
+        "auto_coverage": 0.781,
+        "auto_accuracy": 0.973,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.8,
+        "review_rate": 0.277,
+        "auto_coverage": 0.723,
+        "auto_accuracy": 0.9781,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.85,
+        "review_rate": 0.3747,
+        "auto_coverage": 0.6253,
+        "auto_accuracy": 0.9831,
+        "overall_accuracy": 0.934
+      },
+      {
+        "theta": 0.9,
+        "review_rate": 0.4776,
+        "auto_coverage": 0.5224,
+        "auto_accuracy": 0.9899,
+        "overall_accuracy": 0.934
+      }
+    ],
+    "sweep_svm": [
+      {
+        "theta": 0.3,
+        "review_rate": 0.0158,
+        "auto_coverage": 0.9842,
+        "auto_accuracy": 0.7131,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.35,
+        "review_rate": 0.0686,
+        "auto_coverage": 0.9314,
+        "auto_accuracy": 0.7394,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.4,
+        "review_rate": 0.1214,
+        "auto_coverage": 0.8786,
+        "auto_accuracy": 0.7658,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.45,
+        "review_rate": 0.1689,
+        "auto_coverage": 0.8311,
+        "auto_accuracy": 0.7873,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.5,
+        "review_rate": 0.2665,
+        "auto_coverage": 0.7335,
+        "auto_accuracy": 0.8129,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.55,
+        "review_rate": 0.3193,
+        "auto_coverage": 0.6807,
+        "auto_accuracy": 0.8372,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.6,
+        "review_rate": 0.3747,
+        "auto_coverage": 0.6253,
+        "auto_accuracy": 0.8608,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.65,
+        "review_rate": 0.4248,
+        "auto_coverage": 0.5752,
+        "auto_accuracy": 0.8945,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.7,
+        "review_rate": 0.4776,
+        "auto_coverage": 0.5224,
+        "auto_accuracy": 0.9141,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.75,
+        "review_rate": 0.5515,
+        "auto_coverage": 0.4485,
+        "auto_accuracy": 0.9294,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.8,
+        "review_rate": 0.6095,
+        "auto_coverage": 0.3905,
+        "auto_accuracy": 0.9527,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.85,
+        "review_rate": 0.6992,
+        "auto_coverage": 0.3008,
+        "auto_accuracy": 0.9474,
+        "overall_accuracy": 0.7071
+      },
+      {
+        "theta": 0.9,
+        "review_rate": 0.7757,
+        "auto_coverage": 0.2243,
+        "auto_accuracy": 0.9647,
+        "overall_accuracy": 0.7071
+      }
+    ]
+  },
+  "images_per_class": {
+    "cardboard": 403,
+    "glass": 501,
+    "metal": 410,
+    "paper": 594,
+    "plastic": 482,
+    "trash": 137
+  }
+}

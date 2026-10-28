@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environment
+.venv/
+
+# Local caches and run artefacts
+.cache/
+logs/
+# Figures under outputs/analysis are part of the submission; the rest is
+# regenerated on each run, so it is ignored.
+outputs/verified/
+outputs/*.png
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# OS noise
+.DS_Store
+
+# Saved probabilities are small and reproduce_report.py needs them to
+# re-check every number without retraining.
